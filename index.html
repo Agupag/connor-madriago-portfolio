@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connor Madriago, mechanical engineering projects</title>
+<meta name="description" content="Projects by Connor Madriago, a mechanical engineering student at the University of Michigan: a gap-crossing vehicle, an underwater ROV, microrobot motion tracking, and a DJ controller designed down to the circuit boards.">
+<meta property="og:title" content="Connor Madriago, mechanical engineering projects">
+<meta property="og:description" content="Robots, an underwater ROV, lab instrumentation and custom electronics, with what each one was required to do and what it measured.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/gap-vehicle-span-900.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23eceee9'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23c4261a' stroke-width='2.4'/%3E%3Cpath d='M20.5 12.2a6 6 0 1 0 0 7.6' fill='none' stroke='%231e2875' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="sheet top__row">
+    <a class="top__name" href="#top">Connor Madriago</a>
+    <nav aria-label="Sections">
+      <a href="#index">Projects</a>
+      <a href="#teams">Teams and labs</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="pen" type="button" data-redlines-toggle aria-pressed="true">Hide redlines</button>
+    <a class="btn" href="assets/doc/connor-madriago-resume.pdf">Resume (PDF)</a>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="sheet open">
+  <div class="open__head">
+    <h1>Connor Madriago</h1>
+    <div>
+      <p class="open__say">I study mechanical engineering at the University of Michigan. I design machines, wire and program them, and then measure whether they did the job.</p>
+      <p class="open__meta">Class of 2029, Ann Arbor. Looking for an engineering internship.</p>
+    </div>
+  </div>
+
+  <figure class="fig draw open__fig">
+    <div class="fig__frame">
+      <img src="assets/img/gap-vehicle-hero.jpg" width="1706" height="760" alt="A small eight-wheeled vehicle stretched between two round tables. Its centre body sits on the left table and its front wheels rest on the right one, joined by steel rails.">
+      <span class="dim" style="left:80%;top:84%">Asked for: 200 mm gap in 2 min<br>Tested: 400 mm in about 10 s</span>
+    </div>
+    <ol class="notes">
+      <li data-b="21,8" data-t="29.6,14.5">Four servo-driven acrylic linkages fold flat to push the end modules outward.</li>
+      <li data-b="80,31" data-t="73.3,47.6">Steel drawer slides carry the span while the far wheels are in the air.</li>
+      <li data-b="5.5,84" data-t="7,63">Eight DC gear motors, one per wheel. All eight drive once the far wheels land.</li>
+      <li data-b="54,22" data-t="48.5,42">Two Arduinos. One runs the arm sequence, the other drives the motors when told to go.</li>
+      <li data-b="37,78" data-t="45,55">3D-printed honeycomb side walls keep the centre body light.</li>
+    </ol>
+    <figcaption>The gap-crossing vehicle my team built in Shanghai in summer 2026, mid-crossing. I was responsible for the electronics and shared the mechanical design. <a href="#gap-vehicle">Read the project</a></figcaption>
+  </figure>
+</section>
+
+<section class="sheet index" id="index" aria-labelledby="index-h">
+  <h2 id="index-h">Projects, by the kind of work</h2>
+  <p class="index__lede">Pick the row closest to the role you are hiring for.</p>
+  <div class="index__scroll" tabindex="0" role="region" aria-label="Project index table">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Project</th>
+          <th scope="col">When</th>
+          <th scope="col">CAD</th>
+          <th scope="col">Fabrication</th>
+          <th scope="col">Electronics</th>
+          <th scope="col">Firmware</th>
+          <th scope="col">Software</th>
+          <th scope="col">Test and analysis</th>
+          <th scope="col">Presenting</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><a href="#gap-vehicle">Gap-crossing vehicle</a></th>
+          <td class="when">Summer 2026</td>
+          <td class="k" data-label="CAD"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Fabrication"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Electronics"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Firmware"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Software"></td>
+          <td class="k" data-label="Test and analysis"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Presenting"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="#rov">Underwater ROV</a></th>
+          <td class="when">Winter 2026</td>
+          <td class="k" data-label="CAD"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Fabrication"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Electronics"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Firmware"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Software"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Test and analysis"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Presenting"><i></i><span class="visually-hidden">main part</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="#tracker">Microrobot motion tracking</a></th>
+          <td class="when">Winter 2026</td>
+          <td class="k" data-label="CAD"></td>
+          <td class="k" data-label="Fabrication"></td>
+          <td class="k" data-label="Electronics"></td>
+          <td class="k" data-label="Firmware"></td>
+          <td class="k" data-label="Software"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Test and analysis"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Presenting"><i></i><span class="visually-hidden">main part</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="#dj">DJ controller</a></th>
+          <td class="when">2026, ongoing</td>
+          <td class="k" data-label="CAD"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Fabrication"></td>
+          <td class="k" data-label="Electronics"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Firmware"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Software"></td>
+          <td class="k" data-label="Test and analysis"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Presenting"></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="#gridnode">GridNode competition pitch</a></th>
+          <td class="when">June 2026</td>
+          <td class="k" data-label="CAD"></td>
+          <td class="k" data-label="Fabrication"></td>
+          <td class="k" data-label="Electronics"></td>
+          <td class="k" data-label="Firmware"></td>
+          <td class="k" data-label="Software"></td>
+          <td class="k" data-label="Test and analysis"></td>
+          <td class="k" data-label="Presenting"><i></i><span class="visually-hidden">main part</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="#software">Tools on local AI models</a></th>
+          <td class="when">Fall 2026</td>
+          <td class="k" data-label="CAD"></td>
+          <td class="k" data-label="Fabrication"></td>
+          <td class="k" data-label="Electronics"><i class="half"></i><span class="visually-hidden">smaller part</span></td>
+          <td class="k" data-label="Firmware"></td>
+          <td class="k" data-label="Software"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Test and analysis"><i></i><span class="visually-hidden">main part</span></td>
+          <td class="k" data-label="Presenting"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="index__key"><span><i></i>Main part of my work</span><span><i class="half"></i>Smaller part</span></p>
+</section>
+
+<!-- ============ Gap-crossing vehicle ============ -->
+<section class="sheet project" id="gap-vehicle" aria-labelledby="gap-h">
+  <div class="project__side"><div class="project__side-in">
+    <dl class="facts">
+      <div><dt>When</dt><dd>June to August 2026</dd></div>
+      <div><dt>Where</dt><dd>ME 2500J, design and manufacturing course, Shanghai</dd></div>
+      <div><dt>Team</dt><dd>Four students</dd></div>
+      <div><dt>My part</dt><dd>Electronics, and a share of the mechanical design</dd></div>
+      <div><dt>Built with</dt><dd>SolidWorks, laser-cut acrylic, PLA printing, two Arduinos, L298N motor drivers</dd></div>
+    </dl>
+  </div></div>
+
+  <div class="project__body">
+    <div>
+      <h2 id="gap-h">Gap-crossing vehicle</h2>
+      <p class="project__out">A toy-scale vehicle that stretches itself across a gap, then drives over. The brief asked for 200 mm in two minutes. Ours crossed <mark>400 mm in about 10 seconds</mark> and came in under budget.</p>
+    </div>
+
+    <div class="cols">
+      <table class="check">
+        <caption>Required against measured</caption>
+        <thead><tr><th scope="col">Requirement</th><th scope="col">Asked for</th><th scope="col">Our prototype</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Gap crossed</th><td>200 mm</td><td class="got"><mark>up to 400 mm</mark>, unloaded</td></tr>
+          <tr><th scope="row">Time to cross</th><td>under 2 minutes</td><td class="got"><mark>about 10 seconds</mark></td></tr>
+          <tr><th scope="row">Cost</th><td>under 1,000 RMB</td><td class="got"><mark>about 620 RMB</mark></td></tr>
+          <tr><th scope="row">Control</th><td>remote or autonomous</td><td class="got"><mark>autonomous</mark></td></tr>
+          <tr><th scope="row">Carrying a load</th><td>not specified</td><td class="miss">Very little. See what went wrong.</td></tr>
+        </tbody>
+      </table>
+      <figure class="fig">
+        <div class="fig__frame">
+          <video controls muted loop playsinline preload="none" poster="assets/img/gap-vehicle-demo-poster.jpg" width="960" height="540">
+            <source src="assets/video/gap-vehicle-demo.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Six seconds of the prototype reaching across two lab tables.</figcaption>
+      </figure>
+    </div>
+
+    <div class="cols">
+      <div class="say">
+        <h3>The brief</h3>
+        <p>A mock client, a toy company, wanted a vehicle no larger than 500 × 300 × 300 mm that could get itself across a 200 mm gap in under two minutes, for less than 1,000 RMB. Four of us had the summer term to design, build and demonstrate it.</p>
+        <h3>How it works</h3>
+        <p>We scored four concepts in a weighted Pugh matrix: a telescoping lead-screw chassis, shifting the weight, laying down a bridge, and servo-driven extending arms. The arms won. Four servos fold acrylic linkages flat, which pushes the front and rear wheel modules outward on steel drawer slides. When the far wheels land on the other side, all eight wheels drive and the body follows.</p>
+      </div>
+      <div class="say">
+        <h3>What I did</h3>
+        <p>I was responsible for the electronics. Eight DC gear motors run through four L298N drivers. The four servos sit on their own regulated rail, stepped down from the 12 V battery. One Arduino runs the arm sequence and sends a single go or stop character over serial. The second Arduino only drives motors.</p>
+        <p>I also shared the mechanical design with the rest of the team, in SolidWorks.</p>
+        <div class="say say--wrong">
+          <h3>What went wrong</h3>
+          <p>With weight added, the extended front wheels sagged. The drawer slides act as a cantilever, and our bending estimate had already shown the tip drooping further as load went up. The vehicle crossed empty but could carry very little. Stiffer rails or a shorter reach is the first change I would make.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="fig fig--bare">
+      <div class="fig__frame">
+        <img src="assets/img/gap-vehicle-cad-user.jpg" width="1800" height="1321" loading="lazy" alt="Side-view CAD model of the vehicle with its translucent linkage arms crossed above the body and a wheel module at each end.">
+      </div>
+      <ol class="notes">
+        <li data-b="24,22" data-t="38,31">Linkage arms, laser-cut from acrylic.</li>
+        <li data-b="88,22" data-t="62,61">A servo at the base of each arm.</li>
+        <li data-b="96,42" data-t="89,58">End module. It rides out on a drawer slide.</li>
+        <li data-b="29,93" data-t="47,58">Arduino on the deck, motor drivers on the deck below.</li>
+      </ol>
+      <figcaption>The CAD model, arms raised.</figcaption>
+    </figure>
+
+    <figure class="fig">
+      <div class="fig__frame">
+        <img src="assets/img/gap-vehicle-circuit.png" width="1800" height="1269" loading="lazy" alt="Wiring diagram with four motor driver boards across the top, two Arduino boards in the middle, a 12 volt battery and regulator on the left and four servos along the bottom.">
+      </div>
+      <ol class="notes">
+        <li data-b="8,7" data-t="30,15">Four L298N drivers, two motors each.</li>
+        <li data-b="40,34" data-t="48,50">Arduino B: listens for go or stop and drives all eight motors.</li>
+        <li data-b="90,33" data-t="75,48">Arduino A: runs the servo sequence and decides when to go.</li>
+        <li data-b="13,80" data-t="25,62">Regulator steps the 12 V battery down for the servos.</li>
+        <li data-b="62,70" data-t="61,51">Green lines: servo signals from Arduino A. A single serial line links the two boards.</li>
+      </ol>
+      <figcaption>The wiring, as built.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <figure class="fig">
+        <div class="fig__frame">
+          <img src="assets/img/gap-vehicle-control-algorithm.png" width="1000" height="1310" loading="lazy" alt="Flowchart of the launch loop: compress arms, expand arms, send go signal, wait, send stop signal, compress arms, pause and repeat.">
+        </div>
+        <figcaption>The crossing sequence. The left column is the arm controller, the right is the motor controller.</figcaption>
+      </figure>
+      <div>
+        <figure class="fig fig--bare">
+          <div class="fig__frame">
+            <img src="assets/img/gap-vehicle-extra-6.jpg" width="1800" height="602" loading="lazy" alt="Exploded CAD view of the three chassis plates with standoffs, driver boards and the honeycomb shell.">
+          </div>
+          <figcaption>Chassis plates, exploded.</figcaption>
+        </figure>
+        <figure class="fig" style="margin-top:28px">
+          <div class="fig__frame">
+            <img src="assets/img/gap-vehicle-extra-5.png" width="700" height="525" loading="lazy" alt="Plot of slide deflection against position for no load, 400 grams and 800 grams. Deflection at the tip grows from about 1.6 to about 4.8 millimetres.">
+          </div>
+          <figcaption>The team's bending estimate for the extended slide: more load, more droop at the tip.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Underwater ROV ============ -->
+<section class="sheet project" id="rov" aria-labelledby="rov-h">
+  <div class="project__side"><div class="project__side-in">
+    <dl class="facts">
+      <div><dt>When</dt><dd>January to April 2026</dd></div>
+      <div><dt>Where</dt><dd>ENGR 100, University of Michigan</dd></div>
+      <div><dt>Team</dt><dd>Five students, run as a small company with a client</dd></div>
+      <div><dt>My part</dt><dd>Driving simulator, controller firmware, final design presentation to the client</dd></div>
+      <div><dt>Built with</dt><dd>Python, PyBullet, OpenCV, Arduino C++, nRF24 radio, Wokwi, 3D printing</dd></div>
+      <div><dt>Code</dt><dd><a href="https://github.com/Agupag/ROV-Code">Controller firmware</a><br><a href="https://github.com/Agupag/rov_custom_sim">Simulator</a></dd></div>
+    </dl>
+  </div></div>
+
+  <div class="project__body">
+    <div>
+      <h2 id="rov-h">Underwater ROV</h2>
+      <p class="project__out">A PVC-frame inspection vehicle designed and built by a team of five. I wrote a driving simulator for the team and worked on the firmware for the handheld radio controller, including a simulated radio so the code could be tested before the hardware existed.</p>
+    </div>
+
+    <figure class="fig">
+      <div class="fig__frame">
+        <img src="assets/img/rov-overview.jpg" width="1739" height="1538" loading="lazy" alt="CAD render of the ROV: a white PVC frame with three orange floats on top, a clear electronics canister, thrusters on the sides and centre, a battery canister and a small orange camera at the front.">
+      </div>
+      <ol class="notes">
+        <li data-b="84,7" data-t="58,14">Pool-noodle flotation, high on the frame.</li>
+        <li data-b="10,22" data-t="42,32">Electronics canister.</li>
+        <li data-b="95,27" data-t="90,45">Horizontal thrusters. The rear pair is angled 45° for yaw.</li>
+        <li data-b="44,93" data-t="55,66">One vertical thruster for heave.</li>
+        <li data-b="8,93" data-t="26,80">Camera, tilted by a servo through printed bevel gears.</li>
+        <li data-b="90,88" data-t="71,73">Battery canister, low and aft, to keep the centre of gravity under the centre of buoyancy.</li>
+      </ol>
+      <figcaption>The design the team took to its detailed design review, February 2026.</figcaption>
+    </figure>
+
+    <div class="cols cols--wide-left">
+      <table class="check">
+        <caption>Client requirements against the design</caption>
+        <thead><tr><th scope="col">Requirement</th><th scope="col">Asked for</th><th scope="col">Design review value</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Mass</th><td>under 8 kg</td><td class="got">about 5.5 kg in CAD</td></tr>
+          <tr><th scope="row">Size</th><td>fits 46 × 32 × 32 cm</td><td class="got">frame about 41 × 30 × 30 cm</td></tr>
+          <tr><th scope="row">Buoyancy</th><td>slightly positive</td><td class="got">displaces about 5.9 L</td></tr>
+          <tr><th scope="row">Motion</th><td>all directions, hold on target</td><td class="got">3 horizontal thrusters, 1 vertical, tilting camera</td></tr>
+          <tr><th scope="row">Speed</th><td>not specified</td><td class="got">predicted 0.4 m/s forward, 0.25 m/s vertical</td></tr>
+          <tr><th scope="row">Cost</th><td>course budget</td><td class="got">$328 planned, two thirds of it motors</td></tr>
+        </tbody>
+      </table>
+      <div class="say">
+        <h3>The brief</h3>
+        <p>The client scenario was inspecting the risers of offshore wind turbines. The vehicle had to move in every direction, stay slightly buoyant, and hold its camera on the inspection site.</p>
+        <p>The numbers in this table are the team's predictions from CAD and a drag balance, made before the build. They are not pool measurements.</p>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="say">
+        <h3>The simulator</h3>
+        <p>I built a physics simulator in Python that loads the team's CAD assembly and is driven from an on-screen copy of the real controller: left stick for surge and yaw, right stick for camera tilt, two buttons for heave. It shows the camera view and an attitude indicator, and it can record a run. It let the team try the controls before the vehicle was built.</p>
+        <p>The controller panel runs as its own process and talks to the physics loop through shared memory, because the physics engine's window needs the main thread to itself.</p>
+      </div>
+      <figure class="fig">
+        <div class="fig__frame">
+          <img src="assets/img/rov-simulator.jpg" width="640" height="480" loading="lazy" alt="Simulator view of a pool with the small ROV in the centre among blue cubes and orange spheres.">
+        </div>
+        <figcaption>The simulator's pool, with targets to drive around.</figcaption>
+      </figure>
+    </div>
+
+    <div class="cols">
+      <figure class="fig">
+        <div class="fig__frame">
+          <img src="assets/img/rov-joystick-mapping.jpg" width="960" height="540" loading="lazy" alt="Slide showing how three joystick positions map to forward and reverse thrust on the three horizontal thrusters.">
+        </div>
+        <figcaption>How stick positions map to thrusters, from the team's design review.</figcaption>
+      </figure>
+      <div class="say">
+        <h3>The controller firmware</h3>
+        <p>The handheld controller is an Arduino Nano with two joysticks, an LCD and an nRF24 radio. It sends thruster and servo commands, and the vehicle's telemetry rides back in the radio's acknowledgement packet. The controller shows that telemetry on the LCD and logs it to an SD card once a second.</p>
+        <p>To test without hardware, I wrote custom chips in C for the Wokwi circuit simulator that behave like the radio's SPI registers, and a Python bridge with unit tests that rebuilds pin states from serial output.</p>
+        <div class="say say--wrong">
+          <h3>What went wrong</h3>
+          <p>The radio link took the most debugging. The repository still holds the retry and fallback builds from the final week.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Microrobot tracking ============ -->
+<section class="sheet project" id="tracker" aria-labelledby="tracker-h">
+  <div class="project__side"><div class="project__side-in">
+    <dl class="facts">
+      <div><dt>When</dt><dd>February to April 2026</dd></div>
+      <div><dt>Where</dt><dd>Oldham Lab, University of Michigan. Advisor: Prof. Kenn Oldham</dd></div>
+      <div><dt>Program</dt><dd>Undergraduate research through UROP and MRADS</dd></div>
+      <div><dt>My part</dt><dd>Wrote the tracking software, ran actuator tests, presented a poster at the 2026 MRADS Research Symposium</dd></div>
+      <div><dt>Built with</dt><dd>MATLAB, Computer Vision Toolbox, FFmpeg</dd></div>
+    </dl>
+  </div></div>
+
+  <div class="project__body">
+    <div>
+      <h2 id="tracker-h">Microrobot motion tracking</h2>
+      <p class="project__out">A MATLAB tool that follows the tip of a bending microrobot actuator through microscope and 250 frames-per-second video, and reports its angle and travel in microns. On a 1,592-frame run it <mark>held the tip on every frame</mark>.</p>
+    </div>
+
+    <figure class="fig">
+      <div class="fig__frame">
+        <img src="assets/img/research-tracker-fig.jpg" width="1800" height="1280" loading="lazy" alt="Greyscale microscope frame with tracking overlay: a red box at the base of the actuator, a green box at its tip, a line between them and a text readout in the corner.">
+      </div>
+      <ol class="notes">
+        <li data-b="30,82" data-t="45,68">Base of the actuator. Fixed reference.</li>
+        <li data-b="72,22" data-t="58,35">Tip. This is the point being tracked.</li>
+        <li data-b="68,60" data-t="52,50">Beam line. Its length should not change, so a sudden change means a bad match.</li>
+        <li data-b="86,6.5" data-t="71,6.5">Per-frame readout: status, confidence, bend angle and displacement in microns.</li>
+      </ol>
+      <figcaption>One frame of tracker output, as shown on my symposium poster.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="say">
+        <h3>The problem</h3>
+        <p>The lab's actuators are thin films that curl when driven electrically. In the footage the tip is a faint streak with almost no texture, so general-purpose point trackers lose it.</p>
+        <h3>What I built</h3>
+        <p>The tracker blends template matching with optical flow, predicts where the tip should be next from its recent motion, and checks every match against physics: the beam cannot change length and the tip cannot jump. A match that fails is rejected and the tracker re-keys itself. The pixel scale comes from clicking two points a known distance apart.</p>
+        <p>For every frame it writes bend angle, tip displacement and speed to a CSV, and it renders an annotated video and a summary plot.</p>
+      </div>
+      <div>
+        <figure class="fig">
+          <div class="fig__frame">
+            <video controls muted loop playsinline preload="none" poster="assets/img/research-tracking-poster.jpg" width="960" height="488">
+              <source src="assets/video/research-tracking.mp4" type="video/mp4">
+            </video>
+          </div>
+          <figcaption>Nine seconds of tracked footage. The film is dim, which is the point.</figcaption>
+        </figure>
+        <div class="say" style="margin-top:28px">
+          <h3>Result</h3>
+          <p>On one run of 1,592 frames the tracker kept the tip on every frame, 209 of them by recovering after a weak match, with a mean match confidence of <mark>0.96</mark>. On a small-signal run it resolved tip motion of a few tens of microns. It took ten versions to get from a tracker that needed manual correction to one that runs unattended.</p>
+          <p>Results about the actuators themselves belong to the lab, so this page shows only the measurement tool.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DJ controller ============ -->
+<section class="sheet project" id="dj" aria-labelledby="dj-h">
+  <div class="project__side"><div class="project__side-in">
+    <dl class="facts">
+      <div><dt>When</dt><dd>June 2026 to now</dd></div>
+      <div><dt>Where</dt><dd>Personal project</dd></div>
+      <div><dt>Team</dt><dd>Just me, with AI coding agents that I direct</dd></div>
+      <div><dt>Status</dt><dd>Enclosure CAD and four circuit boards designed and checked. Not assembled yet.</dd></div>
+      <div><dt>Built with</dt><dd>Fusion 360, KiCad, Teensy 4.1, ESP32-S3, Python</dd></div>
+    </dl>
+  </div></div>
+
+  <div class="project__body">
+    <div>
+      <h2 id="dj-h">DJ controller</h2>
+      <p class="project__out">A full-size, four-channel DJ controller that I am designing from the enclosure down to the circuit boards. Reworking the hub board's ground return cut its voltage drop <mark>from about 1,000 mV to 12 mV</mark>.</p>
+    </div>
+
+    <figure class="fig">
+      <div class="fig__frame">
+        <img src="assets/img/dj-deck-cad.jpg" width="1282" height="914" loading="lazy" alt="CAD model of one deck of the controller: a large jog wheel, eight performance pads, a pitch fader, transport buttons and part of the mixer section.">
+      </div>
+      <ol class="notes">
+        <li data-b="54,9" data-t="38,36">Jog wheel. A magnetic encoder reads rotation and a capacitive sensor reads touch.</li>
+        <li data-b="88,90" data-t="64,78">Performance pads, lit by addressable LEDs.</li>
+        <li data-b="91,53" data-t="77,47">Pitch fader.</li>
+        <li data-b="6,58" data-t="12,80">Mixer module. It detaches from the two decks.</li>
+      </ol>
+      <figcaption>One deck in Fusion 360. The model is parametric, so circuit board outlines follow the button positions.</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="say">
+        <h3>Mechanical</h3>
+        <p>The controller is 680 × 390 mm and splits into three modules, two decks and a mixer. Board envelopes are taken from the CAD, so moving a button moves its footprint on the board.</p>
+        <h3>Electrical</h3>
+        <p>Four boards. A Teensy 4.1 in the hub speaks USB-MIDI to the laptop, and an ESP32-S3 in each deck scans its controls and reports over UART. Buttons go through I2C expanders, faders through analog multiplexers, and about 94 addressable LEDs light the pads and jog rings.</p>
+      </div>
+      <div class="say">
+        <h3>How I checked it</h3>
+        <p>The hub board passes design-rule checks against the fabricator's limits with zero errors, and the other boards go through the same checks. I ran current-capacity and voltage-drop analysis on the power nets, which is what exposed the ground return on the hub board. I also checked every connector against every other for what happens if a cable is plugged into the wrong one.</p>
+        <h3>Working with AI agents</h3>
+        <p>Much of the board scripting and checking was done by AI coding agents working through KiCad and Fusion 360 tool bridges. I set the architecture and the pass criteria, and I review what comes back before it is kept.</p>
+      </div>
+    </div>
+
+    <figure class="fig">
+      <div class="fig__frame">
+        <img src="assets/img/dj-hub-pcb.png" width="1600" height="942" loading="lazy" alt="Plot of the hub circuit board's copper layers, front copper in red and back copper in blue, with connectors around the edge.">
+      </div>
+      <figcaption>Hub board copper, front layer in red and back layer in blue, from the final review.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ GridNode ============ -->
+<section class="sheet project" id="gridnode" aria-labelledby="grid-h">
+  <div class="project__side"><div class="project__side-in">
+    <dl class="facts">
+      <div><dt>When</dt><dd>May to June 2026</dd></div>
+      <div><dt>Where</dt><dd>2026 China-U.S. Young Maker Competition, Shanghai Division</dd></div>
+      <div><dt>Result</dt><dd>Second Prize</dd></div>
+      <div><dt>Field</dt><dd>205 teams from 57 universities entered the division. 60 reached the in-person final.</dd></div>
+      <div><dt>My part</dt><dd>Delivered the team's pitch to the judges</dd></div>
+    </dl>
+  </div></div>
+
+  <div class="project__body">
+    <div>
+      <h2 id="grid-h">GridNode competition pitch</h2>
+      <p class="project__out">Our team won <mark>Second Prize</mark> in the Shanghai Division of the 2026 China-U.S. Young Maker Competition. I was the one who stood up and pitched it to the judges.</p>
+    </div>
+
+    <div class="cols cols--wide-left">
+      <figure class="fig fig--bare">
+        <div class="fig__frame">
+          <svg viewBox="0 0 640 330" role="img" aria-label="Sketch of a charging station's power over one day. Car charging rises and falls well below the grid connection limit, and batch computing fills the unused space between them." style="display:block;width:100%;height:auto">
+            <defs>
+              <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="9" stroke="#1e2875" stroke-width="1.6"/>
+              </pattern>
+            </defs>
+            <path d="M60,238 L110,240 L160,228 L200,176 L230,128 L262,156 L300,204 L340,218 L380,194 L420,136 L452,92 L482,116 L520,184 L560,228 L600,238 L600,72 L60,72 Z" fill="url(#hatch)" opacity="0.55"/>
+            <path d="M60,238 L110,240 L160,228 L200,176 L230,128 L262,156 L300,204 L340,218 L380,194 L420,136 L452,92 L482,116 L520,184 L560,228 L600,238" fill="none" stroke="#1e2875" stroke-width="2.4" stroke-linejoin="round"/>
+            <line x1="60" y1="72" x2="600" y2="72" stroke="#1e2875" stroke-width="1.6" stroke-dasharray="7 5"/>
+            <path d="M60,40 L60,262 L612,262" fill="none" stroke="#1e2875" stroke-width="1.6"/>
+            <g font-family="Archivo, sans-serif" font-size="13" fill="#555b6e">
+              <text x="60" y="282">midnight</text>
+              <text x="318" y="282" text-anchor="middle">noon</text>
+              <text x="600" y="282" text-anchor="end">midnight</text>
+              <text x="68" y="62" fill="#1e2875">Grid connection limit</text>
+              <text x="318" y="252" text-anchor="middle" fill="#1e2875">Car charging</text>
+              <text transform="translate(44,236) rotate(-90)">Station power</text>
+            </g>
+            <g font-family="'Routed Gothic', sans-serif" font-size="16" fill="#c4261a">
+              <line x1="318" y1="150" x2="330" y2="298" stroke="#c4261a" stroke-width="1.6"/>
+              <circle cx="318" cy="150" r="3.5"/>
+              <text x="330" y="316" text-anchor="middle">Batch AI jobs run in the unused capacity.</text>
+              <line x1="452" y1="82" x2="468" y2="38" stroke="#c4261a" stroke-width="1.6"/>
+              <circle cx="452" cy="82" r="3.5"/>
+              <text x="632" y="30" text-anchor="end">Chargers busy: computing yields first.</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>The idea in one sketch. It is an illustration, not measured data.</figcaption>
+      </figure>
+      <div class="say">
+        <h3>The idea</h3>
+        <p>Fast-charging stations for electric cars are wired for peak demand and sit mostly idle. GridNode puts a containerised, liquid-cooled computing node at the station to run batch AI jobs on that spare grid capacity. Its software forecasts the station's load and moves the computing out of the way before the chargers need the power.</p>
+        <h3>What I did</h3>
+        <p>I delivered the team's pitch, in English, to the judging panel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Software on local models ============ -->
+<section class="sheet band" id="software" aria-labelledby="sw-h">
+  <h2 id="sw-h">Tools on local AI models</h2>
+  <p class="band__lede">I run open models of up to 35 billion parameters on my own Mac with llama.cpp, MLX and LM Studio, and I build tools on top of them. I write these with AI coding agents. My part is the architecture, the test harness, and deciding what counts as working.</p>
+
+  <div class="bench">
+    <article class="wide">
+      <h3>An autopilot that asks a local model for help</h3>
+      <figure class="fig">
+        <div class="fig__frame">
+          <img src="assets/img/autopilot-plan.jpg" width="1600" height="928" loading="lazy" alt="In-game control panel showing a goal, obtain one iron pickaxe, broken into a checklist of completed steps.">
+        </div>
+        <figcaption>The autopilot's plan for one goal, every step verified.</figcaption>
+      </figure>
+      <p>A Minecraft mod, about 50,000 lines of Java, that wraps an open-source pathfinder in a planner. Give it a goal and it works out the steps from the game's own recipes, runs them, checks the inventory after each one, and re-plans when a step fails. When it is stuck it consults a model running on my Mac, which may only answer through a short list of typed, validated tools.</p>
+      <p>In a logged test on a fresh world it finished six queued goals in 22 minutes without dying.</p>
+      <p class="tools">Java, Gradle, Fabric, llama.cpp, Hermes Agent, Qwen</p>
+    </article>
+
+    <article class="narrow">
+      <h3>Light Control</h3>
+      <p>A macOS app that runs two lasers, two party lights and two fog machines over a USB-DMX cable at about 40 updates a second, with chases synced to the beat. For fixtures with no manual, a vision model watches through the Mac's camera while the app sweeps each channel, and works out what the channel does.</p>
+      <p>It starts in blackout and keeps the lasers on safe frames until armed.</p>
+      <p class="tools">Swift, TypeScript, DMX512, LM Studio</p>
+
+      <h3 style="margin-top:36px">Railhead</h3>
+      <p>The macOS app I use to track this internship search. Logging real applications powers a pixel-art factory town.</p>
+      <p class="tools">SwiftUI, a command-line tool, a local agent that edits the data</p>
+      <figure class="fig" style="margin-top:16px">
+        <div class="fig__frame">
+          <img src="assets/img/railhead-town.png" width="1408" height="960" loading="lazy" alt="Pixel-art town scene from the Railhead app." style="image-rendering:pixelated">
+        </div>
+        <figcaption>Railhead's town.</figcaption>
+      </figure>
+    </article>
+  </div>
+</section>
+
+<!-- ============ Teams ============ -->
+<section class="sheet band" id="teams" aria-labelledby="teams-h">
+  <h2 id="teams-h">Teams, labs and teaching</h2>
+  <table class="roster">
+    <tbody>
+      <tr>
+        <th scope="row">Michigan Baja Racing<span>Suspension subteam</span></th>
+        <td class="when">Fall 2026 to now</td>
+        <td><p>Rebuilt CVT transmissions on several of the team's off-road cars and worked through how they are designed.</p></td>
+      </tr>
+      <tr>
+        <th scope="row">Michigan Aeronautical Science Association<span>CAD team, student rocketry</span></th>
+        <td class="when">Sept 2025 to Apr 2026</td>
+        <td><p>Modelled components for the landing pad subsystem in Siemens NX and Fusion 360.</p></td>
+      </tr>
+      <tr>
+        <th scope="row">Z Lab<span>Undergraduate research assistant</span></th>
+        <td class="when">Sept 2025 to Jan 2026</td>
+        <td><p>Worked on a large robotics project with a team of more than 25: Fusion 360 CAD, 3D printing, C++, computer vision and electrical work on the robots.</p></td>
+      </tr>
+      <tr>
+        <th scope="row">Drone swarm class<span>Student teacher, Portland</span></th>
+        <td class="when">2023 to 2025</td>
+        <td><p>Taught an accredited class in which students designed, built and flew a drone swarm from bare microcontrollers and INAV. Worked with FAA officials to get the waivers the swarm tests needed.</p></td>
+      </tr>
+      <tr>
+        <th scope="row">FIRST Robotics Team 2915<span>Captain, design lead, CAD lead</span></th>
+        <td class="when">2021 to 2025</td>
+        <td><p>Reworked how the team designs and prototypes, coached newer members in CAD and fabrication, and led a team on one robot subassembly.</p></td>
+      </tr>
+      <tr>
+        <th scope="row">University of Michigan<span>Mechanical Engineering, graduating May 2029</span></th>
+        <td class="when">2025 to now</td>
+        <td><p>Michigan Research and Discovery Scholars. Dean's List and University Honors, Winter 2026. Coursework so far includes solid mechanics, design and manufacturing, differential equations, and electricity and magnetism.</p></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<footer class="close" id="contact">
+  <div class="sheet">
+    <div class="close__grid">
+      <h2>I'm looking for an engineering internship.</h2>
+      <ul class="close__links">
+        <li><span>Email</span><a href="mailto:madriago@umich.edu">madriago@umich.edu</a></li>
+        <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/connormadriago/">linkedin.com/in/connormadriago</a></li>
+        <li><span>GitHub</span><a href="https://github.com/Agupag">github.com/Agupag</a></li>
+        <li><span>Resume</span><a href="assets/doc/connor-madriago-resume.pdf">One page, PDF</a></li>
+      </ul>
+    </div>
+    <p class="close__fine">Set in Archivo and Routed Gothic, both open source. The red marks on the figures are mine.</p>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>
