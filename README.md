@@ -19,3 +19,5 @@ npm run build
 The built site in `dist/` is published from the `gh-pages` branch.
 
 Fonts: Archivo and Routed Gothic, both under the SIL Open Font License (licences in `public/assets/fonts`).
+
+`public/gridnode/` is a built copy of GridNode OS, the browser model a teammate wrote for our GridNode competition project. It is not my code.

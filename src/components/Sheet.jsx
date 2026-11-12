@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Figure } from "./Media.jsx";
 import { rich } from "./rich.jsx";
-import { openProject } from "../hooks.js";
+import { openProject, useMedia } from "../hooks.js";
 import { sketches } from "../data/sketches.jsx";
 
 const ModelViewer = lazy(() => import("./ModelViewer.jsx"));
@@ -65,6 +65,39 @@ function Specs({ block }) {
         ))}
       </dl>
     </div>
+  );
+}
+
+// A separate web app shown in a frame. It only loads when asked for,
+// and on narrow screens it opens in its own tab instead.
+function Embed({ block, n }) {
+  const wide = useMedia("(min-width: 900px)");
+  const [on, setOn] = useState(false);
+  return (
+    <figure className="fig">
+      <div className="fig__frame fig__frame--embed" style={{ aspectRatio: block.ratio || "16 / 10" }}>
+        {on && wide ? (
+          <iframe src={block.src} title={block.title} sandbox="allow-scripts allow-same-origin" />
+        ) : (
+          <>
+            <img src={block.poster} alt={block.alt || ""} loading="lazy" />
+            {wide ? (
+              <button type="button" className="btn embed__go" onClick={() => setOn(true)}>
+                {block.cta}
+              </button>
+            ) : (
+              <a className="btn embed__go" href={block.src} target="_blank" rel="noreferrer">
+                {block.cta}
+              </a>
+            )}
+          </>
+        )}
+      </div>
+      <figcaption>
+        <b>Fig. {n}. </b>
+        {rich(block.caption)}
+      </figcaption>
+    </figure>
   );
 }
 
@@ -140,17 +173,7 @@ function Block({ block, num }) {
         </figure>
       );
     case "embed":
-      return (
-        <figure className="fig">
-          <div className="fig__frame fig__frame--embed" style={{ aspectRatio: block.ratio || "16 / 10" }}>
-            <iframe src={block.src} title={block.title} loading="lazy" sandbox="allow-scripts allow-same-origin" />
-          </div>
-          <figcaption>
-            <b>Fig. {num.get(block)}. </b>
-            {rich(block.caption)}
-          </figcaption>
-        </figure>
-      );
+      return <Embed block={block} n={num.get(block)} />;
     default:
       return null;
   }

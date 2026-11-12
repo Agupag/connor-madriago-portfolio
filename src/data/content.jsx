@@ -505,7 +505,7 @@ export const items = [
     line: "==Second Prize==, Shanghai Division. I gave the pitch.",
     when: "2026",
     tags: ["Software"],
-    cover: { sketch: "gridnode", alt: "Sketch of charging-station power over a day with computing filling the unused capacity." },
+    cover: img("gridnode-os.jpg", 1280, 800, "A dark engineering dashboard showing a 3D layout of a charging site with a compute container, transformer and chargers."),
     stamp: ["205 teams entered", "60 reached the final"],
     specs: [
       ["Event", "2026 China-U.S. Young Maker Competition, Shanghai Division"],
@@ -521,7 +521,16 @@ export const items = [
       ["Field", "205 teams from 57 universities entered. 60 reached the in-person final"],
       ["My part", "Delivered the team's pitch to the judges, in English"],
     ],
-    hero: { type: "sketch", id: "gridnode", caption: "The idea in one sketch. An illustration, not measured data." },
+    hero: {
+      type: "embed",
+      src: "gridnode/index.html",
+      poster: "assets/img/gridnode-os.jpg",
+      alt: "GridNode OS: a 3D layout of the site with an equipment list.",
+      title: "GridNode OS, an interactive model of the GridNode system",
+      cta: "Load the interactive model",
+      ratio: "16 / 10",
+      caption: "GridNode OS, the interactive model a teammate built for the project. It runs in the browser on simulated data, with pages for the site layout, the cooling loop, the microgrid and the GPU racks. [Open it full screen](gridnode/index.html)",
+    },
     blocks: [
       cols([
         stack(
@@ -535,9 +544,8 @@ export const items = [
           ])
         ),
         stack(
-          text("My part", [
-            "I delivered the pitch in English to the judging panel. A teammate built an interactive browser model of the system.",
-          ]),
+          text("My part", ["I delivered the pitch in English to the judging panel. The interactive model above is a teammate's work."]),
+          { type: "sketch", id: "gridnode", caption: "The idea in one sketch. An illustration, not measured data." },
           text("About these numbers", ["The figures are from our pitch. They are design targets and estimates, not measurements from built hardware."])
         ),
       ]),
