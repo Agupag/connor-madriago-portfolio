@@ -82,6 +82,7 @@ export const items = [
         },
         fig(vid("gap-vehicle-demo.mp4", "gap-vehicle-demo-poster.jpg", "The prototype extending across two lab tables."), "The prototype reaching across two lab tables."),
       ]),
+      { type: "widget", id: "crossing", caption: "The crossing sequence as a schematic. Press play, drag the slider, or change the gap. Not to scale." },
       cols([
         stack(
           text("The brief", [
@@ -285,33 +286,17 @@ export const items = [
         ],
         "left"
       ),
+      { type: "widget", id: "mixer", caption: "Drag the stick or hold a heave button. The thruster states and the packet bytes follow the same rules as the firmware." },
       cols([
-        stack(
-          text("Controller firmware", [
+        text("Controller firmware", [
             "The controller is an Arduino Nano with two joysticks, a 16 × 2 LCD, an SD card and an nRF24L01 radio at 250 kbps.",
             "The vehicle sends a 32-byte telemetry packet: yaw, pitch, roll, battery voltage and current, pressure, temperature, time, and a water-intrusion reading. The controller answers inside the radio's acknowledgement with a 16-byte control packet holding two servo angles and four thruster commands. One exchange carries data both ways.",
             "Telemetry goes to the LCD and to a CSV on the SD card once a second. If no packet arrives for 5 seconds the loop stops waiting and carries on.",
           ]),
-          text("Testing without the vehicle", [
+        text("Testing without the vehicle", [
             "I wrote two custom chips in C for the Wokwi circuit simulator, 572 and 498 lines. They behave like the part of the nRF24L01 that the RF24 library uses: eleven SPI commands, the register map, the status flags and the IRQ line. The chip feeds the firmware a made-up telemetry packet and decodes the control packet that comes back, lighting one LED per thruster.",
             "A Python bridge with 9 unit tests reads the Nano's serial output and forwards stick state to the simulator, so the real controller can drive the simulated vehicle.",
-          ])
-        ),
-        stack(
-          {
-            type: "specs",
-            title: "Stick position to thrusters",
-            rows: [
-              ["Forward", "rear left, rear right and front all forward"],
-              ["Forward right", "rear left and front forward, rear right off"],
-              ["Turn right in place", "rear left forward, rear right reverse"],
-              ["Reverse", "all three in reverse"],
-              ["Centre", "all off. Deadband is ±20 counts of 128"],
-              ["Heave", "two buttons, vertical thruster only"],
-            ],
-          },
-          fig(img("rov-joystick-mapping.jpg", 960, 540, "Slide showing how joystick positions map to forward and reverse thrust on the three horizontal thrusters."), "The stick mapping as presented at the design review.")
-        ),
+          ]),
       ]),
       cols([
         text(
@@ -388,6 +373,7 @@ export const items = [
           }
         ),
       ]),
+      { type: "widget", id: "confidence", caption: "Match confidence for every frame of one run, straight from the tracker's output file. Move over the chart to read a frame." },
       cols([
         text(
           "What went wrong",
@@ -473,6 +459,15 @@ export const items = [
           ])
         ),
       ]),
+      {
+        type: "model",
+        src: "assets/model/dj-deck-front.glb",
+        look: "shaded",
+        zUp: false,
+        alt: "3D model of the deck front circuit board, slowly turning.",
+        caption: "The deck front board in 3D, exported straight from the KiCad file. Drag to turn it.",
+        notes: [],
+      },
       cols([
         fig(img("dj-pcb-deck-front-angle.png", 1304, 901, "3D render of the deck front board."), "Deck front board."),
         fig(img("dj-pcb-led-ring-angle.png", 1153, 973, "3D render of the ring-shaped LED board that sits under a jog wheel."), "Jog wheel LED ring, 60 addressable LEDs."),
@@ -604,38 +599,22 @@ export const items = [
       text("Autopilot with a local model as backup", [
         "A Minecraft mod, about 50,000 lines of Java with 279 unit tests, wrapped around an open-source pathfinder. You give it a goal such as an iron pickaxe. The planner works out the steps from the game's own recipes, runs them, checks the inventory after each one, and re-plans when a step fails. The planning core has no game code in it, so it is tested against a fake world.",
       ]),
+      { type: "widget", id: "timeline", caption: "Where the 22 minutes went in the logged run of 2 November 2026, on a fresh world. Model replies took 25 to 35 s typically and 89 s for a hard one, with one timeout at 180 s." },
       cols([
-        stack(
-          text("How the model is kept on a short lead", [
+        text("How the model is kept on a short lead", [
             "The model is only asked when a step fails twice, makes no progress for 90 seconds, or would otherwise stop and ask me. It gets 12 consults per goal and 4 per step.",
             "It cannot send commands. It can only reply with moves from a typed list: goto, walk, explore, surface, dig, place, get. Every field is range-checked, and an invalid reply gets one repair round. The game side refuses anything that digs under the player, touches lava or breaks something the player built.",
             "The request runs on its own thread and the player keeps moving while the model thinks. If the step finished in the meantime, the answer is thrown away.",
-          ])
-        ),
-        stack(
-          {
-            type: "specs",
-            title: "Logged run, 2 November 2026, fresh world",
-            rows: [
-              ["Stone pickaxe", "1 min 12 s"],
-              ["16 torches", "10 s"],
-              ["Iron pickaxe", "1 min 19 s"],
-              ["Food", "15 min 56 s"],
-              ["3 diamonds", "1 min 24 s"],
-              ["Shield", "2 min 12 s"],
-              ["Total", "22 min, 0 deaths, 0 requests for help"],
-              ["Model replies", "25 to 35 s typical, 89 s for a hard one, one timeout at 180 s"],
-            ],
-          },
-          text(
-            "What went wrong",
-            [
-              "The food goal took 16 of the 22 minutes. Hunting at night dropped health from 20 to 1.5 in 75 seconds, and the bot then stood still for four minutes because the hunger bar sat just under the level where health regenerates. It now eats safe raw meat when it needs to heal, and spaces its attacks.",
-            ],
-            { wrong: true }
-          )
-        ),
+          ]),
+        { type: "widget", id: "movecheck", caption: "Try a reply the model might send. The ranges are the ones the mod enforces." },
       ]),
+      text(
+        "What went wrong",
+        [
+          "The food goal took 16 of the 22 minutes. Hunting at night dropped health from 20 to 1.5 in 75 seconds, and the bot then stood still for four minutes because the hunger bar sat just under the level where health regenerates. It now eats safe raw meat when it needs to heal, and spaces its attacks.",
+        ],
+        { wrong: true }
+      ),
       cols([
         text("A harness for local coding agents", [
           "About 5,000 lines of Python that let the local model work on the mod itself: read and edit code, build, run unit tests, run the in-game test suites and look at screenshots.",

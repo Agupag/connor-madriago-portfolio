@@ -149,7 +149,18 @@ export default function Cover({ hidden }) {
       </div>
 
       <div className="cover__main">
-        <div className="cover__list" onPointerMove={() => !touched && setTouched(true)}>
+        <div
+          className="cover__list"
+          onPointerMove={() => !touched && setTouched(true)}
+          onKeyDown={(e) => {
+            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+            const rows = [...e.currentTarget.querySelectorAll(".row")];
+            const at = rows.indexOf(document.activeElement);
+            if (at < 0) return;
+            e.preventDefault();
+            rows[(at + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length].focus();
+          }}
+        >
           <div className="filters" role="group" aria-label="Filter by kind of work">
             {["All", ...filters].map((f) => (
               <button

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useInView, useMedia, useSize } from "../hooks.js";
 import { sketches } from "../data/sketches.jsx";
 
@@ -72,6 +73,28 @@ export function Media({ media, eager, className, still = false }) {
   );
 }
 
+// Full-window view of one figure. Escape or a click closes it.
+function Lightbox({ media, onClose }) {
+  useEffect(() => {
+    const key = (e) => {
+      if (e.key !== "Escape") return;
+      e.stopImmediatePropagation();
+      onClose();
+    };
+    window.addEventListener("keydown", key, true);
+    return () => window.removeEventListener("keydown", key, true);
+  }, [onClose]);
+  return createPortal(
+    <div className="zoom" role="dialog" aria-modal="true" aria-label="Enlarged figure" onClick={onClose}>
+      <img src={media.img} alt={media.alt || ""} />
+      <button type="button" className="pen zoom__close" autoFocus>
+        Close
+      </button>
+    </div>,
+    document.body
+  );
+}
+
 // A figure with numbered red callouts. `notes` carry balloon and target
 // positions as percentages of the frame; hovering a note lights its balloon.
 export function Figure({ media, notes = [], stamp, caption, bare = false, n }) {
@@ -79,6 +102,8 @@ export function Figure({ media, notes = [], stamp, caption, bare = false, n }) {
   const { w, h } = useSize(frame);
   const seen = useInView(frame, { amount: 0.3, once: true });
   const [hot, setHot] = useState(null);
+  const [zoom, setZoom] = useState(false);
+  const canZoom = media.img && !media.pixel && !media.model;
   const px = ([x, y]) => [(x * w) / 100, (y * h) / 100];
 
   return (
@@ -112,6 +137,12 @@ export function Figure({ media, notes = [], stamp, caption, bare = false, n }) {
             {i + 1}
           </span>
         ))}
+        {canZoom && (
+          <button type="button" className="fig__zoom" onClick={() => setZoom(true)}>
+            Enlarge
+          </button>
+        )}
+        {zoom && <Lightbox media={media} onClose={() => setZoom(false)} />}
         {stamp && (
           <span className="dim" style={{ left: stamp.at[0] + "%", top: stamp.at[1] + "%", "--i": notes.length }}>
             {stamp.lines.map((l, i) => (

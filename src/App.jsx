@@ -5,7 +5,7 @@ import Sheet from "./components/Sheet.jsx";
 import { useRoute } from "./hooks.js";
 import { me, items } from "./data/content.jsx";
 
-function Header({ redlines, setRedlines }) {
+function Header({ redlines, setRedlines, theme, setTheme }) {
   return (
     <header className="top">
       <div className="sheet top__row">
@@ -18,6 +18,9 @@ function Header({ redlines, setRedlines }) {
           onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
         >
           Contact
+        </button>
+        <button type="button" className="textb" onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}>
+          {theme === "blueprint" ? "Print view" : "Blueprint view"}
         </button>
         <button type="button" className="pen" aria-pressed={redlines} onClick={() => setRedlines(!redlines)}>
           {redlines ? "Hide redlines" : "Show redlines"}
@@ -56,6 +59,20 @@ export default function App() {
   const item = items.find((it) => it.id === id && it.blocks.length) || null;
   const sheets = items.filter((it) => it.blocks.length);
   const [redlines, setRedlines] = useState(true);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("theme") === "blueprint" ? "blueprint" : "print";
+    } catch {
+      return "print";
+    }
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
+  }, [theme]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("no-redlines", !redlines);
@@ -68,7 +85,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 260, damping: 30 }}>
       <LayoutGroup>
-        <Header redlines={redlines} setRedlines={setRedlines} />
+        <Header redlines={redlines} setRedlines={setRedlines} theme={theme} setTheme={setTheme} />
         <Cover hidden={!!item} />
         <Footer hidden={!!item} />
         <AnimatePresence>{item && <Sheet key="sheet" item={item} items={sheets} />}</AnimatePresence>

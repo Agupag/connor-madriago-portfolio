@@ -6,12 +6,11 @@ import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 
-const PAPER = 0xeceee9;
-const INK = 0x1e2875;
+const cssColor = (name) => new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue(name).trim());
 
 // Draws a CAD model the way a drafter would: paper-coloured faces, ink edges.
 // `notes` pin numbered balloons to points given in the model's own coordinates.
-export default function ModelViewer({ src, notes = [], zUp = true, alt, interactive = true }) {
+export default function ModelViewer({ src, notes = [], zUp = true, alt, interactive = true, look = "lines" }) {
   const wrap = useRef(null);
   const tags = useRef([]);
   const [state, setState] = useState("loading");
@@ -47,8 +46,20 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
 
     const root = new THREE.Group();
     scene.add(root);
-    const lineMat = new LineMaterial({ color: INK, linewidth: 1.25, worldUnits: false });
-    const faceMat = new THREE.MeshBasicMaterial({ color: PAPER, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+    const lineMat = new LineMaterial({ color: cssColor("--ink"), linewidth: 1.25, worldUnits: false });
+    const faceMat = new THREE.MeshBasicMaterial({ color: cssColor("--paper"), polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+    // Redraw in the new colours when the page switches between print and blueprint.
+    const themeWatch = new MutationObserver(() => {
+      lineMat.color.copy(cssColor("--ink"));
+      faceMat.color.copy(cssColor("--paper"));
+    });
+    themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    if (look === "shaded") {
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f99, 2.2));
+      const sun = new THREE.DirectionalLight(0xffffff, 2.4);
+      sun.position.set(2, 5, 3);
+      scene.add(sun);
+    }
     const anchors = [];
     let alive = true;
     let visible = false;
@@ -65,6 +76,7 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
         const meshes = [];
         model.traverse((o) => o.isMesh && meshes.push(o));
         meshes.forEach((m) => {
+          if (look === "shaded") return;
           m.material = faceMat;
           const edges = new THREE.EdgesGeometry(m.geometry, 24);
           const lines = new LineSegments2(new LineSegmentsGeometry().fromEdgesGeometry(edges), lineMat);
@@ -143,6 +155,7 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
       cancelAnimationFrame(raf);
       io.disconnect();
       ro.disconnect();
+      themeWatch.disconnect();
       controls.dispose();
       scene.traverse((o) => o.geometry && o.geometry.dispose());
       lineMat.dispose();
@@ -150,7 +163,7 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [src, zUp, interactive]);
+  }, [src, zUp, interactive, look]);
 
   return (
     <div ref={wrap} className="model">

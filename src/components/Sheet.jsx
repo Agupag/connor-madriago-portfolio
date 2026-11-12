@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useScroll } from "motion/react";
 import { Figure } from "./Media.jsx";
 import { rich } from "./rich.jsx";
 import { openProject, useMedia } from "../hooks.js";
 import { sketches } from "../data/sketches.jsx";
 
 const ModelViewer = lazy(() => import("./ModelViewer.jsx"));
+const Widget = lazy(() => import("./Widgets.jsx").then((m) => ({ default: ({ id }) => { const W = m.widgets[id]; return <W />; } })));
 
 function Text({ block }) {
   return (
@@ -151,12 +152,26 @@ function Block({ block, num }) {
         </figure>
       );
     }
+    case "widget":
+      return (
+        <figure className="fig fig--widget">
+          <div className="fig__frame">
+            <Suspense fallback={<div className="model__wait">Loading</div>}>
+              <Widget id={block.id} />
+            </Suspense>
+          </div>
+          <figcaption>
+            <b>Fig. {num.get(block)}. </b>
+            {rich(block.caption)}
+          </figcaption>
+        </figure>
+      );
     case "model":
       return (
         <figure className="fig">
           <div className="fig__frame fig__frame--model">
             <Suspense fallback={<div className="model__wait">Loading the 3D model</div>}>
-              <ModelViewer {...block} />
+              <ModelViewer {...block} look={block.look} />
             </Suspense>
           </div>
           {block.notes?.length > 0 && (
@@ -184,7 +199,7 @@ function numberFigures(item) {
   const num = new Map();
   let n = 0;
   const walk = (b) => {
-    if (["figure", "sketch", "model", "embed"].includes(b.type)) {
+    if (["figure", "sketch", "model", "embed", "widget"].includes(b.type)) {
       if (b.caption) num.set(b, ++n);
     } else if (b.items) b.items.forEach(walk);
   };
@@ -200,10 +215,23 @@ export default function Sheet({ item, items }) {
   const prev = items[(i - 1 + items.length) % items.length];
   const next = items[(i + 1) % items.length];
   const num = numberFigures(item);
+  const body = useRef(null);
+  const [sections, setSections] = useState([]);
+  const { scrollYProgress } = useScroll({ container: scroller });
+
+  // Section list for the side column, read from the headings actually on the page.
+  useEffect(() => {
+    const hs = [...(body.current?.querySelectorAll("h3, caption") || [])];
+    setSections(hs.map((h, k) => ({ k, label: h.textContent })));
+  }, [item.id]);
+  const jump = (k) => {
+    const hs = body.current?.querySelectorAll("h3, caption");
+    hs?.[k]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
     scroller.current?.scrollTo(0, 0);
-    closeBtn.current?.focus({ preventScroll: true });
+    document.getElementById("sheet-h")?.focus({ preventScroll: true });
   }, [item.id]);
 
   useEffect(() => {
@@ -234,6 +262,7 @@ export default function Sheet({ item, items }) {
       transition={{ duration: 0.25 }}
     >
       <div className="layer__bar">
+        <motion.div className="layer__progress" style={{ scaleX: scrollYProgress }} />
         <div className="sheet layer__bar-in">
           <button ref={closeBtn} type="button" className="pen" onClick={() => openProject(null)}>
             Back to all work
@@ -257,11 +286,14 @@ export default function Sheet({ item, items }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.08 }}
         >
-          <h1 id="sheet-h">{item.title}</h1>
+          <h1 id="sheet-h" tabIndex={-1}>
+            {item.title}
+          </h1>
           <p className="project__out">{rich(item.lede)}</p>
         </motion.header>
 
         <aside className="project__side">
+          <div className="project__side-in">
           <dl className="facts">
             {item.facts.map(([k, v]) => (
               <div key={k}>
@@ -270,9 +302,24 @@ export default function Sheet({ item, items }) {
               </div>
             ))}
           </dl>
+          {sections.length > 2 && (
+            <nav className="toc" aria-label="On this page">
+              <h2>On this page</h2>
+              <ul>
+                {sections.map((s) => (
+                  <li key={s.k}>
+                    <button type="button" onClick={() => jump(s.k)}>
+                      {s.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          </div>
         </aside>
 
-        <div className="project__body">
+        <div className="project__body" ref={body}>
           {item.hero && (
             <motion.div layoutId={"cover-" + item.id} className="project__hero">
               <Block block={item.hero} num={num} />
