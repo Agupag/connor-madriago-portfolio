@@ -1,16 +1,21 @@
 # Connor Madriago: project portfolio
 
-Source for my engineering portfolio site. Plain HTML, CSS and a small script, no build step.
+Source for my engineering portfolio site: https://agupag.github.io/connor-madriago-portfolio/
 
-- `index.html`: the page
-- `css/site.css`: styles
-- `js/site.js`: draws the numbered red callouts on figures from each figure's notes list
-- `assets/`: images, video, fonts and the resume PDF
-
-Fonts: Archivo and Routed Gothic, both under the SIL Open Font License (licences in `assets/fonts`).
-
-To preview locally:
+React and Vite. Content lives in `src/data/content.jsx`; the page shell and the figure, video and 3D model components are in `src/components`.
 
 ```bash
-python3 -m http.server 4173
+npm install
 ```
+
+```bash
+npm run dev
+```
+
+```bash
+npm run build
+```
+
+The built site in `dist/` is published from the `gh-pages` branch.
+
+Fonts: Archivo and Routed Gothic, both under the SIL Open Font License (licences in `public/assets/fonts`).
