@@ -145,6 +145,13 @@ export const items = [
           { b: [62, 70], t: [61, 51], text: "Green: servo signal lines." },
         ]
       ),
+      cols(
+        [
+          text("Bringing it up", ["Before the full harness went in, each motor driver was tested on the bench with one Arduino and a breadboard."]),
+          fig(img("gap-vehicle-wiring-1.jpg", 1400, 1866, "An Arduino, a breadboard and a red L298N motor driver wired together on a wooden bench."), "One L298N driver on the bench, 23 July."),
+        ],
+        "right"
+      ),
       cols([
         fig(
           img("gap-vehicle-control-algorithm.png", 1000, 1310, "Flowchart of the launch loop: compress arms, expand arms, send go, wait, send stop, compress arms, repeat."),
@@ -169,7 +176,7 @@ export const items = [
     line: "==11,800-line simulator== and the controller firmware.",
     when: "2026",
     tags: ["Mechanical", "Electronics", "Software"],
-    cover: img("rov-overview.jpg", 1739, 1538, "The ROV's CAD model drawn as a line drawing, slowly turning.", { model: "assets/model/rov.glb" }),
+    cover: img("rov-frame-side-lit.jpg", 1400, 1050, "The ROV's CAD model drawn as a line drawing, slowly turning.", { model: "assets/model/rov.glb" }),
     stamp: ["PyBullet, 120 Hz", "the team's own CAD model"],
     specs: [
       ["My part", "Physics simulator, controller firmware, design presentation"],
@@ -201,6 +208,33 @@ export const items = [
       ],
     },
     blocks: [
+      cols([
+        fig(
+          img("rov-frame-side-lit.jpg", 1400, 1050, "The finished ROV on a blue backdrop: white PVC frame, blue foam floats, a clear electronics tube and a lit orange lamp at the front."),
+          "The finished vehicle, April 2026.",
+          [
+            { b: [44, 8], t: [27, 22], text: "Pool-noodle flotation." },
+            { b: [64, 13], t: [40, 30], text: "Electronics canister." },
+            { b: [82, 42], t: [61, 55], text: "Thruster in a 3D-printed mount." },
+            { b: [78, 86], t: [59, 69], text: "Lamp and tilting camera mount." },
+            { b: [9, 50], t: [6, 27], text: "Tether." },
+          ]
+        ),
+        fig(
+          img("rov-controller-front.jpg", 1400, 1050, "A pink 3D-printed handheld controller with a video screen, a small LCD, two joysticks and three antennas."),
+          "The handheld controller. The label under the screen reads: stay above 10.5 volts.",
+          [
+            { b: [86, 40], t: [56, 50], text: "Video screen for the camera feed." },
+            { b: [11, 46], t: [27, 63], text: "Joysticks in octagonal guards, so you can feel eight directions." },
+            { b: [48, 90], t: [48, 68], text: "16 × 2 LCD for telemetry." },
+            { b: [74, 12], t: [57, 22], text: "Antennas." },
+          ]
+        ),
+      ]),
+      fig(
+        vid("rov-sim-1.mp4", "rov-sim-1-poster.jpg", "Screen recording of the simulator: a 3D pool with the ROV on the left and the on-screen controller panel on the right."),
+        "A recorded simulator run. The 3D pool is on the left, the on-screen controller with its camera view on the right."
+      ),
       cols(
         [
           stack(
@@ -215,7 +249,7 @@ export const items = [
             ])
           ),
           stack(
-            fig(img("rov-simulator.jpg", 640, 480, "Simulator view of a pool with the small ROV among blue cubes and orange spheres."), "The simulator's pool, with targets to drive around."),
+            fig(vid("rov-sim-3.mp4", "rov-sim-3-poster.jpg", "A later simulator recording with darker water and a telemetry readout."), "A later build, April 2026, with the telemetry readout."),
             {
               type: "specs",
               title: "How the two processes talk",
@@ -279,27 +313,18 @@ export const items = [
           fig(img("rov-joystick-mapping.jpg", 960, 540, "Slide showing how joystick positions map to forward and reverse thrust on the three horizontal thrusters."), "The stick mapping as presented at the design review.")
         ),
       ]),
-      text(
-        "What went wrong",
-        [
-          "At the tank test my custom controller did not work, and the vehicle was driven with the course's stock controller. The repository shows the last week: one build that retries the radio 50 times, one with a different command encoding, one that sums both sticks for turning. I did not find the root cause before the deadline.",
-          "The vehicle drifted left and was slow in heave with a single vertical thruster. At the showcase the team still reported problems on 5 of the 7 riser sections.",
-          "The simulated radio only tested my logic, not the real link. Next time I would get the real radio pair talking on a bench first.",
-        ],
-        { wrong: true }
-      ),
-      fig(
-        img("rov-overview.jpg", 1739, 1538, "Colour CAD render of the ROV."),
-        "The design the team took to its detailed design review, February 2026.",
-        [
-          { b: [84, 7], t: [58, 14], text: "Pool-noodle flotation, high on the frame." },
-          { b: [10, 22], t: [42, 32], text: "Electronics canister." },
-          { b: [95, 27], t: [90, 45], text: "Horizontal thrusters on printed mounts." },
-          { b: [44, 93], t: [55, 66], text: "Vertical thruster." },
-          { b: [8, 93], t: [26, 80], text: "Tilting camera." },
-          { b: [90, 88], t: [71, 73], text: "Battery canister, low and aft, so the centre of gravity sits under the centre of buoyancy." },
-        ]
-      ),
+      cols([
+        text(
+          "What went wrong",
+          [
+            "At the tank test my custom controller did not work, and the vehicle was driven with the course's stock controller. The repository shows the last week: one build that retries the radio 50 times, one with a different command encoding, one that sums both sticks for turning. I did not find the root cause before the deadline.",
+            "The vehicle drifted left and was slow in heave with a single vertical thruster. At the showcase the team still reported problems on 5 of the 7 riser sections.",
+            "The simulated radio only tested my logic, not the real link. Next time I would get the real radio pair talking on a bench first.",
+          ],
+          { wrong: true }
+        ),
+        fig(vid("rov-pool-test.mp4", "rov-pool-test-poster.jpg", "The ROV moving through green tank water on its yellow tether."), "The vehicle in the test tank."),
+      ]),
     ],
   },
 
@@ -452,6 +477,13 @@ export const items = [
         fig(img("dj-pcb-deck-front-angle.png", 1304, 901, "3D render of the deck front board."), "Deck front board."),
         fig(img("dj-pcb-led-ring-angle.png", 1153, 973, "3D render of the ring-shaped LED board that sits under a jog wheel."), "Jog wheel LED ring, 60 addressable LEDs."),
       ]),
+      cols(
+        [
+          fig(img("dj-pcb-faders-encoders.jpg", 1400, 1050, "A hand holding the main circuit board of a commercial DJ controller, with a fader, buttons and encoders."), "The main board from a commercial controller, opened up for reference."),
+          fig(img("dj-teensy-breadboard.jpg", 1400, 1866, "A Teensy microcontroller board plugged into a breadboard on a wooden table."), "First bench test: a Teensy on a breadboard, April 2026."),
+        ],
+        "left"
+      ),
       fig(
         img("dj-deck-cad.jpg", 1282, 914, "CAD model of one deck: a large jog wheel, eight performance pads, a pitch fader, transport buttons and part of the mixer."),
         "One deck in Fusion 360.",
@@ -710,10 +742,30 @@ export const items = [
     line: "Captain, design lead and CAD lead.",
     when: "2021 to 2025",
     tags: ["Mechanical", "Teaching"],
-    cover: { plate: ["FRC 2915", "Captain, design lead, CAD lead"] },
-    specs: [["Role", "Team captain, design team lead, CAD team lead"], ["Where", "Portland, Oregon"]],
-    detail: "Reworked how the team designs and prototypes, coached newer members in CAD and fabrication, and led a team on one robot subassembly.",
-    blocks: [],
+    cover: img("frc-robot-build.jpg", 1400, 2334, "A competition robot frame with a tall elevator, belt spools and wiring, on a workshop floor."),
+    specs: [
+      ["Role", "Team captain, design team lead, CAD team lead"],
+      ["Where", "Portland, Oregon"],
+      ["When", "January 2021 to April 2025"],
+    ],
+    lede: "Four years on a FIRST Robotics Competition team, finishing as team captain, design team lead and CAD team lead.",
+    facts: [
+      ["When", "January 2021 to April 2025"],
+      ["Where", "Team 2915, Portland, Oregon"],
+      ["Role", "Team captain, design team lead, CAD team lead"],
+    ],
+    hero: null,
+    blocks: [
+      text("What I did", [
+        "I reworked how the team designs and prototypes so it moved faster.",
+        "I coached newer members in 3D modelling, fabrication and working as a team.",
+        "I led a group on one robot subassembly.",
+      ]),
+      cols([
+        fig(img("frc-robot-build.jpg", 1400, 2334, "A competition robot frame with a tall elevator, belt spools and wiring, on a workshop floor."), "The 2025 robot's elevator during build season."),
+        fig(img("frc-robot-topdown.jpg", 1400, 1866, "Top-down view of a robot's electronics inside a blue-bumpered frame."), "Electronics bay from above, March 2025."),
+      ]),
+    ],
   },
   {
     id: "baja",
