@@ -184,33 +184,33 @@ export const items = [
       ["Built with", "Python, PyBullet, Tkinter, OpenCV, Arduino C++, nRF24L01, Wokwi"],
       ["Code", "[Controller firmware](https://github.com/Agupag/ROV-Code), [Simulator](https://github.com/Agupag/rov_custom_sim)"],
     ],
-    hero: fig(
-      img("rov-frame-side-lit.jpg", 1400, 1050, "The finished ROV on a blue backdrop: white PVC frame, blue foam floats, a clear electronics tube and a lit orange lamp at the front."),
-      "The finished vehicle, April 2026.",
-      [
-        { b: [44, 8], t: [27, 22], text: "Pool-noodle flotation." },
-        { b: [64, 13], t: [40, 30], text: "Electronics canister." },
-        { b: [82, 42], t: [61, 55], text: "Thruster in a 3D-printed mount." },
-        { b: [78, 86], t: [59, 69], text: "Lamp and tilting camera mount." },
-        { b: [9, 50], t: [6, 27], text: "Tether." },
-      ]
-    ),
+    hero: {
+      type: "model",
+      src: "assets/model/rov.glb",
+      alt: "Line drawing of the ROV's CAD model, slowly turning.",
+      caption: "The team's CAD assembly, the same file the simulator loads. Drag to turn it.",
+      notes: [
+        { p: [0, -0.335, 0.036], text: "Camera, tilted by a servo through printed bevel gears." },
+        { p: [0.003, -0.33, 0.141], text: "Front thruster." },
+        { p: [0.123, 0.02, 0.138], text: "Rear thrusters, angled 45° for yaw." },
+        { p: [0.003, -0.15, 0.057], text: "The one vertical thruster." },
+        { p: [-0.001, -0.068, 0.019], text: "Battery canister, mounted low." },
+        { p: [0.001, -0.159, 0.238], text: "Electronics canister." },
+      ],
+    },
     blocks: [
       cols([
-        {
-        type: "model",
-        src: "assets/model/rov.glb",
-        alt: "Line drawing of the ROV's CAD model, slowly turning.",
-        caption: "The team's CAD assembly, the same file the simulator loads. Drag to turn it.",
-        notes: [
-          { p: [0, -0.335, 0.036], text: "Camera, tilted by a servo through printed bevel gears." },
-          { p: [0.003, -0.33, 0.141], text: "Front thruster." },
-          { p: [0.123, 0.02, 0.138], text: "Rear thrusters, angled 45° for yaw." },
-          { p: [0.003, -0.15, 0.057], text: "The one vertical thruster." },
-          { p: [-0.001, -0.068, 0.019], text: "Battery canister, mounted low." },
-          { p: [0.001, -0.159, 0.238], text: "Electronics canister." },
-        ],
-      },
+        fig(
+          img("rov-frame-side-lit.jpg", 1400, 1050, "The finished ROV on a blue backdrop: white PVC frame, blue foam floats, a clear electronics tube and a lit orange lamp at the front."),
+          "The finished vehicle, April 2026.",
+          [
+            { b: [44, 8], t: [27, 22], text: "Pool-noodle flotation." },
+            { b: [64, 13], t: [40, 30], text: "Electronics canister." },
+            { b: [82, 42], t: [61, 55], text: "Thruster in a 3D-printed mount." },
+            { b: [78, 86], t: [59, 69], text: "Lamp and tilting camera mount." },
+            { b: [9, 50], t: [6, 27], text: "Tether." },
+          ]
+        ),
         fig(
           img("rov-controller-front.jpg", 1400, 1050, "A pink 3D-printed handheld controller with a video screen, a small LCD, two joysticks and three antennas."),
           "The handheld controller. The label under the screen reads: stay above 10.5 volts.",
