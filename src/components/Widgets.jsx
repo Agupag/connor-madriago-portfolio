@@ -92,10 +92,10 @@ export function ThrusterMixer() {
           <circle className="w-knob" cx={(stick.x / 127) * 78} cy={(-stick.y / 127) * 78} r="24" />
         </svg>
         <div className="w-row">
-          <button type="button" className={"w-key" + (heave === 1 ? " is-on" : "")} onPointerDown={() => setHeave(1)} onPointerUp={() => setHeave(0)} onPointerLeave={() => setHeave(0)} onKeyDown={(e) => e.key === " " && setHeave(1)} onKeyUp={() => setHeave(0)}>
+          <button type="button" className={"w-key" + (heave === 1 ? " is-on" : "")} onPointerDown={() => setHeave(1)} onPointerUp={() => setHeave(0)} onPointerLeave={() => setHeave(0)} onKeyDown={(e) => (e.key === " " || e.key === "Enter") && setHeave(1)} onKeyUp={() => setHeave(0)}>
             Heave up
           </button>
-          <button type="button" className={"w-key" + (heave === 2 ? " is-on" : "")} onPointerDown={() => setHeave(2)} onPointerUp={() => setHeave(0)} onPointerLeave={() => setHeave(0)} onKeyDown={(e) => e.key === " " && setHeave(2)} onKeyUp={() => setHeave(0)}>
+          <button type="button" className={"w-key" + (heave === 2 ? " is-on" : "")} onPointerDown={() => setHeave(2)} onPointerUp={() => setHeave(0)} onPointerLeave={() => setHeave(0)} onKeyDown={(e) => (e.key === " " || e.key === "Enter") && setHeave(2)} onKeyUp={() => setHeave(0)}>
             Heave down
           </button>
         </div>
@@ -220,9 +220,9 @@ export function CrossingSim() {
       </svg>
 
       <div className="w-cross__read">
-        <p className="w-say" aria-live="polite">{step}</p>
+        <p className="w-say" aria-live={playing ? "off" : "polite"}>{step}</p>
         <dl className="w-stats">
-          <div><dt>Servo angle</dt><dd>{Math.round(4 + (65 * ext) / E)}°</dd></div>
+          <div><dt>Servo angle</dt><dd>{Math.round(4 + (65 * ext) / E)}° of 69°</dd></div>
           <div><dt>Sensor</dt><dd>{overGap ? "over 20 cm" : "about 4 cm"}</dd></div>
           <div><dt>Wheels on a table</dt><dd>{[xr, xc - 60, xc + 60, xf].filter(onTable).length * 2} of 8</dd></div>
         </dl>
@@ -252,7 +252,7 @@ const GOALS = [
   ["Stone pickaxe", 72, ""],
   ["16 torches", 10, ""],
   ["Iron pickaxe", 79, ""],
-  ["Food", 956, "Most of the run. Hunting at night dropped health from 20 to 1.5 in 75 seconds, then the bot stood still for four minutes because the hunger bar sat just under the level where health regenerates."],
+  ["Food", 956, "Most of the run. What went wrong, below, explains why."],
   ["3 diamonds", 84, ""],
   ["Shield", 132, "Last goal in the queue. The run ended with no deaths and no requests for help."],
 ];
@@ -298,7 +298,9 @@ const MOVES = {
   explore: { field: "seconds", label: "Time, seconds", max: 300, ok: [15, 180], make: (v) => ({ move: "explore", seconds: v }) },
   dig: { field: "cells", label: "Cells to dig", max: 200, ok: [1, 75], make: (v) => ({ move: "dig", cells: v }), world: true },
   place: { field: "blocks", label: "Blocks to place", max: 100, ok: [1, 32], make: (v) => ({ move: "place", block: "cobblestone", blocks: v }), world: true },
-  command: { field: null, label: "", make: () => ({ move: "command", text: "/give @s diamond 64" }) },
+  surface: { field: null, label: "", make: () => ({ move: "surface" }) },
+  get: { field: "count", label: "How many", max: 128, ok: [1, 64], make: (v) => ({ move: "get", item: "oak_log", count: v }) },
+  command: { field: null, label: "", bad: true, make: () => ({ move: "command", text: "/give @s diamond 64" }) },
 };
 const WORLD = [
   ["feet", "Under the player's feet", "the game refuses to dig or build under the player's feet."],
@@ -313,7 +315,7 @@ export function MoveCheck() {
   const m = MOVES[move];
   let why = "";
   if (move === "command") why = "Rejected: not one of the known moves. Raw commands are never passed through.";
-  else if (val < m.ok[0] || val > m.ok[1]) why = `Rejected: ${m.field} must be ${m.ok[0]} to ${m.ok[1]}. The model gets one chance to repair its reply.`;
+  else if (m.ok && (val < m.ok[0] || val > m.ok[1])) why = `Rejected: ${m.field} must be ${m.ok[0]} to ${m.ok[1]}. The model gets one chance to repair its reply.`;
   else if (m.world) {
     const hit = WORLD.find(([k]) => flags[k]);
     if (hit) why = "Valid reply, but " + hit[2];
@@ -323,8 +325,8 @@ export function MoveCheck() {
       <div className="w-move__in">
         <div className="w-row" role="group" aria-label="Move the model replies with">
           {Object.keys(MOVES).map((k) => (
-            <button key={k} type="button" className={"w-key" + (move === k ? " is-on" : "")} aria-pressed={move === k} onClick={() => { setMove(k); setVal(MOVES[k].ok ? Math.round((MOVES[k].ok[0] + MOVES[k].ok[1]) / 2) : 0); }}>
-              {k}
+            <button key={k} type="button" className={"w-key" + (move === k ? " is-on" : "") + (MOVES[k].bad ? " w-key--bad" : "")} aria-pressed={move === k} onClick={() => { setMove(k); setVal(MOVES[k].ok ? Math.round((MOVES[k].ok[0] + MOVES[k].ok[1]) / 2) : 0); }}>
+              {MOVES[k].bad ? "command (not allowed)" : k}
             </button>
           ))}
         </div>
@@ -347,7 +349,7 @@ export function MoveCheck() {
       <div className="w-move__out">
         <pre>{JSON.stringify(m.make(val))}</pre>
         <p className={"w-verdict" + (why ? " is-no" : "")} aria-live="polite">
-          {why || <mark>Accepted. The move is queued.</mark>}
+          {why || "Accepted. The move is queued."}
         </p>
       </div>
     </div>
@@ -403,3 +405,193 @@ export function ConfidenceChart() {
 }
 
 export const widgets = { mixer: ThrusterMixer, crossing: CrossingSim, timeline: RunTimeline, movecheck: MoveCheck, confidence: ConfidenceChart };
+
+/* ------------------------------------------------------------------ */
+/* Drone swarm: one command, from the flight stick to the flight       */
+/* controller, using the packet formats in the class repository        */
+
+const THROTTLE_NOTES = [
+  [1499, "lowest"],
+  [1600, "lifting off"],
+  [1700, "flying"],
+  [1999, "flying too fast"],
+  [2000, "crashing"],
+];
+
+export function SwarmLink() {
+  const [active, setActive] = useState(2);
+  const [pr, setPr] = useState({ roll: 1500, pitch: 1500 });
+  const [yaw, setYaw] = useState(1500);
+  const [thr, setThr] = useState(1000);
+  const [armed, setArmed] = useState(true);
+  const [kill, setKill] = useState(false);
+  const pad = useRef(null);
+
+  const aim = (e) => {
+    const r = pad.current.getBoundingClientRect();
+    const cl = (v) => Math.max(-1, Math.min(1, v));
+    const x = cl(((e.clientX - r.left) / r.width - 0.5) * 2);
+    const y = cl(-((e.clientY - r.top) / r.height - 0.5) * 2);
+    setPr({ roll: Math.round(1500 + x * 500), pitch: Math.round(1500 + y * 500) });
+  };
+  const arm = armed ? 1600 : 1500;
+  const ks = kill ? 1700 : 1000;
+  // Channel order in ArduinoMSP.ino: pitch, roll, throttle, yaw, nav hold, arm, unused, kill.
+  const ch = [pr.pitch, pr.roll, thr, yaw, 1500, arm, 1500, ks];
+  const payload = ch.flatMap((v) => [v & 255, v >> 8]);
+  const head = [0x24, 0x4d, 0x3c, 16, 200];
+  const sum = [16, 200, ...payload].reduce((a, b) => a ^ b, 0);
+  const H = (b) => b.toString(16).padStart(2, "0").toUpperCase();
+  const udp = `MAN|192.168.4.2|${yaw}|${pr.roll}|${pr.pitch}|${thr}|${ks}|${arm}|1500|`;
+  const note = THROTTLE_NOTES.find(([max]) => thr <= max)[1];
+  const names = ["pitch", "roll", "throttle", "yaw", "nav hold", "arm", "unused", "kill"];
+
+  return (
+    <div className="w w-swarm">
+      <div className="w-swarm__slots" role="group" aria-label="Base station drone slots">
+        {Array.from({ length: 8 }, (_, i) => (
+          <button key={i} type="button" className={"w-slot" + (active === i ? " is-on" : "")} aria-pressed={active === i} onClick={() => setActive(i)}>
+            <svg viewBox="-20 -20 40 40" aria-hidden="true">
+              <path d="M-11 -11 L11 11 M-11 11 L11 -11" />
+              {[[-11, -11], [11, -11], [-11, 11], [11, 11]].map(([x, y]) => <circle key={x + "" + y} cx={x} cy={y} r="6" />)}
+              <rect x="-5" y="-5" width="10" height="10" rx="2" />
+            </svg>
+            <span>{i + 1}</span>
+          </button>
+        ))}
+      </div>
+      <p className="w-small">Eight slots in the base station. Pick the drone the stick flies. The others get centred sticks and an arm value of 1500, so they stay disarmed.</p>
+
+      <div className="w-swarm__body">
+        <div className="w-swarm__in">
+          <svg
+            ref={pad}
+            viewBox="-110 -110 220 220"
+            className="w-stick"
+            tabIndex={0}
+            role="application"
+            aria-label="Roll and pitch stick. Drag it."
+            onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); aim(e); }}
+            onPointerMove={(e) => e.buttons && aim(e)}
+            onPointerUp={() => setPr({ roll: 1500, pitch: 1500 })}
+            onPointerCancel={() => setPr({ roll: 1500, pitch: 1500 })}
+          >
+            <rect className="w-line" x="-100" y="-100" width="200" height="200" rx="14" />
+            <path className="w-dash" d="M-100 0 H100 M0 -100 V100" />
+            <text className="w-label" x="-94" y="-86">pitch {pr.pitch}</text>
+            <text className="w-label" x="94" y="94" textAnchor="end">roll {pr.roll}</text>
+            <circle className="w-knob" cx={((pr.roll - 1500) / 500) * 80} cy={(-(pr.pitch - 1500) / 500) * 80} r="20" />
+          </svg>
+          <label className="w-slider">
+            <span>Throttle {thr}: {note}</span>
+            <input type="range" min="1000" max="2000" step="10" value={thr} onChange={(e) => setThr(+e.target.value)} />
+          </label>
+          <label className="w-slider">
+            <span>Yaw {yaw}</span>
+            <input type="range" min="1000" max="2000" step="10" value={yaw} onChange={(e) => setYaw(+e.target.value)} onPointerUp={() => setYaw(1500)} />
+          </label>
+          <div className="w-row">
+            <button type="button" className={"w-key" + (armed ? " is-on" : "")} aria-pressed={armed} onClick={() => setArmed(!armed)}>
+              {armed ? "Armed" : "Disarmed"}
+            </button>
+            <button type="button" className={"w-key w-key--kill" + (kill ? " is-on" : "")} aria-pressed={kill} onClick={() => setKill(!kill)}>
+              Kill switch
+            </button>
+          </div>
+        </div>
+
+        <ol className="w-hops">
+          <li>
+            <h4>Laptop to drone {active + 1}, over WiFi</h4>
+            <p className="w-small">A UDP text packet to port 2390, through the class's ESP8266 access point.</p>
+            <pre>{udp}</pre>
+          </li>
+          <li>
+            <h4>Arduino to flight controller, over serial</h4>
+            <p className="w-small">The Arduino Nano 33 IoT on the drone rebuilds it as an MSP_SET_RAW_RC frame at 9600 baud.</p>
+            <div className="w-frame">
+              {head.map((b, i) => <span key={"h" + i} className="w-frame__h">{H(b)}</span>)}
+              {ch.map((v, i) => (
+                <span key={"c" + i} className={"w-frame__ch" + (v !== 1500 && v !== 1000 ? " is-on" : "")} title={names[i]}>
+                  <b>{H(v & 255)} {H(v >> 8)}</b>
+                  <i>{names[i]}</i>
+                </span>
+              ))}
+              <span className="w-frame__h" title="checksum">{H(sum)}</span>
+            </div>
+            <p className="w-small">Header $M&lt;, 16 data bytes, command 200, eight channels low byte first, XOR checksum.</p>
+          </li>
+          <li>
+            <h4>What INAV does with it</h4>
+            <p className="w-say" aria-live="polite">
+              {kill
+                ? "Kill switch on. Channel 8 reads 1700, and the base station stops reading the stick."
+                : !armed
+                ? "Disarmed. The arm channel reads 1500, outside the arm range, so the motors stay off."
+                : `Armed. Throttle ${thr}: the base station's own comment for this range says "${note}".`}
+            </p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+widgets.swarm = SwarmLink;
+
+/* ------------------------------------------------------------------ */
+/* Local models: what I ran, when, and how fast it generated           */
+
+const MODELS = [
+  { date: "Mar 31", name: "Qwen3-Coder-Next", how: "MLX, LM Studio", tps: 62, range: "50 to 74 tok/s", note: "First model I used for coding work. Time to first token about 1 s." },
+  { date: "Apr 11", name: "Gemma 4 26B-A4B", how: "Q8_0 GGUF, LM Studio", tps: 62.8, range: "62.8 tok/s median", note: "Prompts up to 35k tokens." },
+  { date: "Apr 20", name: "Qwen3.6 35B-A3B", how: "Q8_0 in LM Studio, UD-Q6_K on llama.cpp", tps: 64, range: "60 to 69 tok/s", note: "Same day I built llama.cpp from source with Metal and wrote launch scripts for a 262k context. Mixture of experts: 35B parameters, about 3B active per token." },
+  { date: "Jun 7", name: "Qwen3.6 27B (dense)", how: "MLX 8-bit, LM Studio", tps: 15.4, range: "about 15 tok/s", note: "48 to 92 s before the first token. The 35B mixture-of-experts model was about 4 times faster on the same machine, which is why I stayed with A3B models." },
+  { date: "Jun 7", name: "Llama 3.3 70B", how: "Q8_0 GGUF, LM Studio", tps: 6.7, range: "6.7 tok/s", note: "A dense 70B fits in 128 GB at Q8, but it is too slow for agent loops." },
+  { date: "Oct 20", name: "Qwen3.8 Flash Next", how: "UD-IQ4_XS, about 94 GB, LM Studio", tps: 34, range: "30 to 36 tok/s", note: "262k context, prompts up to 117k tokens. Too big to sit beside a second model in LM Studio, which unloaded one mid-answer when the other was called." },
+  { date: "Nov 4", name: "Qwen3.8 Flash Next + MTP", how: "IQ3_S with a Q4_0 MTP head, Hermes on llama.cpp", tps: 39.7, best: 71.9, range: "39.7 tok/s median, 71.9 best", note: "Measured over 3,839 generations in the server log. Prompt processing 369 tok/s median. 56.5% of drafted tokens accepted, 2.84 tokens per step." },
+];
+
+export function ModelLog() {
+  const [sel, setSel] = useState(MODELS.length - 1);
+  const max = 75;
+  return (
+    <div className="w w-models">
+      <div className="w-models__axis" aria-hidden="true">
+        {[0, 25, 50, 75].map((v) => (
+          <span key={v} style={{ left: (v / max) * 100 + "%" }}>{v}</span>
+        ))}
+      </div>
+      <ul className="w-models__list">
+        {MODELS.map((m, i) => (
+          <li key={m.name}>
+            <button
+              type="button"
+              className={"w-models__row" + (sel === i ? " is-on" : "")}
+              aria-pressed={sel === i}
+              onClick={() => setSel(i)}
+              onPointerEnter={(e) => e.pointerType === "mouse" && setSel(i)}
+              onFocus={() => setSel(i)}
+            >
+              <span className="w-models__date">{m.date}</span>
+              <span className="w-models__name">{m.name}</span>
+              <span className="w-models__track">
+                <span className="w-models__bar" style={{ width: (m.tps / max) * 100 + "%" }} />
+                {m.best && <span className="w-models__best" style={{ left: (m.best / max) * 100 + "%" }} title="best" />}
+              </span>
+              <span className="w-models__tps">{m.tps}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div className="w-models__detail" aria-live="polite">
+        <h4>{MODELS[sel].name}</h4>
+        <p className="w-run__time">{MODELS[sel].range}</p>
+        <p className="w-small">{MODELS[sel].how}</p>
+        <p>{MODELS[sel].note}</p>
+      </div>
+    </div>
+  );
+}
+
+widgets.models = ModelLog;

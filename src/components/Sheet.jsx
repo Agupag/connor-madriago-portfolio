@@ -224,6 +224,24 @@ export default function Sheet({ item, items }) {
     const hs = [...(body.current?.querySelectorAll("h3, caption") || [])];
     setSections(hs.map((h, k) => ({ k, label: h.textContent })));
   }, [item.id]);
+  const [here, setHere] = useState(0);
+  // Highlight the section currently being read.
+  useEffect(() => {
+    const root = scroller.current;
+    const hs = [...(body.current?.querySelectorAll("h3, caption") || [])];
+    if (!root || !hs.length) return;
+    const onScroll = () => {
+      const top = root.getBoundingClientRect().top + 140;
+      let k = 0;
+      hs.forEach((h, n) => {
+        if (h.getBoundingClientRect().top < top) k = n;
+      });
+      setHere(k);
+    };
+    root.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => root.removeEventListener("scroll", onScroll);
+  }, [item.id, sections.length]);
   const jump = (k) => {
     const hs = body.current?.querySelectorAll("h3, caption");
     hs?.[k]?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -264,7 +282,7 @@ export default function Sheet({ item, items }) {
       <div className="layer__bar">
         <motion.div className="layer__progress" style={{ scaleX: scrollYProgress }} />
         <div className="sheet layer__bar-in">
-          <button ref={closeBtn} type="button" className="pen" onClick={() => openProject(null)}>
+          <button ref={closeBtn} type="button" className="textb layer__back" onClick={() => openProject(null)}>
             Back to all work
           </button>
           <span className="layer__where">
@@ -307,8 +325,8 @@ export default function Sheet({ item, items }) {
               <h2>On this page</h2>
               <ul>
                 {sections.map((s) => (
-                  <li key={s.k}>
-                    <button type="button" onClick={() => jump(s.k)}>
+                  <li key={s.k} className={here === s.k ? "is-here" : ""}>
+                    <button type="button" aria-current={here === s.k ? "location" : undefined} onClick={() => jump(s.k)}>
                       {s.label}
                     </button>
                   </li>

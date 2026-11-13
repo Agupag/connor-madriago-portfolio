@@ -14,15 +14,15 @@ function Header({ redlines, setRedlines, theme, setTheme }) {
         </a>
         <button
           type="button"
-          className="textb"
+          className="textb top__opt"
           onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
         >
           Contact
         </button>
-        <button type="button" className="textb" onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}>
-          {theme === "blueprint" ? "Print view" : "Blueprint view"}
+        <button type="button" className="textb top__opt" aria-pressed={theme === "blueprint"} onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}>
+          Blueprint {theme === "blueprint" ? "on" : "off"}
         </button>
-        <button type="button" className="pen" aria-pressed={redlines} onClick={() => setRedlines(!redlines)}>
+        <button type="button" className="pen top__opt" aria-pressed={redlines} onClick={() => setRedlines(!redlines)}>
           {redlines ? "Hide redlines" : "Show redlines"}
         </button>
         <a className="btn" href={me.resume}>

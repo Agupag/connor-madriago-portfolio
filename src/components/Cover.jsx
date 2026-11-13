@@ -77,6 +77,8 @@ function Preview({ item }) {
   );
 }
 
+let hoverTimer;
+
 function Row({ item, active, onActive, wide }) {
   return (
     <motion.li
@@ -89,7 +91,12 @@ function Row({ item, active, onActive, wide }) {
       <button
         type="button"
         className={"row" + (active ? " is-active" : "")}
-        onPointerEnter={(e) => e.pointerType === "mouse" && onActive(item.id)}
+        onPointerEnter={(e) => {
+          if (e.pointerType !== "mouse") return;
+          clearTimeout(hoverTimer);
+          hoverTimer = setTimeout(() => onActive(item.id), 60);
+        }}
+        onPointerLeave={() => clearTimeout(hoverTimer)}
         onFocus={() => onActive(item.id)}
         onClick={() => item.blocks.length && openProject(item.id)}
         data-row={item.id}
@@ -141,10 +148,13 @@ export default function Cover({ hidden }) {
   return (
     <main className="cover sheet" id="top" inert={hidden || undefined}>
       <div className="cover__top">
-        <h1>{me.name}</h1>
         <div className="cover__who">
+          <h1>{me.name}</h1>
           <p className="cover__say">{me.say}</p>
+        </div>
+        <div className="cover__aside">
           <p className="cover__meta">{me.meta}</p>
+          <p className="cover__tools">{me.tools}</p>
         </div>
       </div>
 
@@ -179,6 +189,7 @@ export default function Cover({ hidden }) {
             ))}
           </div>
 
+          {wide && <p className="cover__hint">Hover a row to preview it. Click to open the full write-up.</p>}
           {groups.map((g) => {
             const rows = shown.filter((it) => it.group === g.id);
             if (!rows.length) return null;
