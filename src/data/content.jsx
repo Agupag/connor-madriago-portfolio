@@ -27,7 +27,6 @@ export const groups = [
   { id: "teams", title: "Teams, labs and teaching" },
   { id: "side", title: "Software side projects" },
 ];
-export const filters = ["Mechanical", "Electronics", "Software", "Research", "Teaching"];
 
 const heroPhoto = img("gap-vehicle-hero.jpg", 1706, 760, "A small eight-wheeled vehicle stretched between two round tables, its centre body on the left table and its front wheels on the right one.");
 
@@ -39,7 +38,6 @@ const all = [
     title: "Gap-crossing vehicle",
     line: "Built the electronics and wrote both Arduino programs. Crossed ==400 mm in about 10 s==: twice the required gap in a twelfth of the time.",
     when: "2026",
-    tags: ["Mechanical", "Electronics"],
     cover: heroPhoto,
     stamp: ["Asked: 200 mm in 2 min", "Tested: 400 mm in about 10 s"],
     specs: [
@@ -166,7 +164,6 @@ const all = [
     title: "Underwater ROV",
     line: "Wrote the team's PyBullet physics simulator and the firmware for its handheld radio controller.",
     when: "2026",
-    tags: ["Mechanical", "Electronics", "Software"],
     cover: img("rov-frame-side-lit.jpg", 1400, 1050, "The ROV's CAD model drawn as a line drawing, slowly turning.", { model: "assets/model/rov.glb" }),
     stamp: ["PyBullet, 120 Hz", "the team's own CAD model"],
     specs: [
@@ -309,7 +306,6 @@ const all = [
     title: "Microrobot motion tracking",
     line: "Wrote a MATLAB tracker for a microrobot's tip. Held the tip on ==all 1,592 frames== of a test run.",
     when: "2026",
-    tags: ["Research", "Software"],
     cover: vid("research-tracking.mp4", "research-tracking-poster.jpg", "Dim microscope footage with a tracking overlay following the tip of an actuator."),
     stamp: ["0 of 1,592 frames lost", "mean confidence 0.96"],
     specs: [
@@ -382,7 +378,6 @@ const all = [
     title: "Drone swarm",
     line: "Student teacher. Led the drones' switch to MSP and co-wrote the WiFi link that flies them from one laptop.",
     when: "2023 to 2025",
-    tags: ["Software", "Electronics", "Teaching"],
     cover: img("drone-pad-field.jpg", 1240, 844, "A small quadcopter sitting on a square pad in a mown field."),
     stamp: ["INAV 8.0.1, MSP over UART", "8-drone base station"],
     specs: [
@@ -463,7 +458,6 @@ const all = [
     title: "DJ controller",
     line: "Solo project: a parametric Fusion 360 enclosure and four custom PCBs. Cut the hub's worst ground drop ==from 1,001 mV to 12 mV==.",
     when: "2026",
-    tags: ["Mechanical", "Electronics"],
     cover: img("dj-cad-whole.jpg", 1800, 1108, "CAD render of a full-size DJ controller with two jog wheels, a mixer in the middle and a screen at the back."),
     stamp: ["1,852 timeline features", "4 boards, 441 footprints"],
     specs: [
@@ -587,7 +581,6 @@ const all = [
     title: "GridNode",
     line: "==Second Prize==, Shanghai Division, in a field of 205 teams. I delivered our pitch.",
     when: "2026",
-    tags: ["Software"],
     cover: img("gridnode-os.jpg", 1280, 800, "A dark engineering dashboard showing a 3D layout of a charging site with a compute container, transformer and chargers."),
     stamp: ["205 teams entered", "60 reached the final"],
     specs: [
@@ -642,7 +635,6 @@ const all = [
     title: "Local models and agents",
     line: "Built my own local AI stack: a 262k-context model at ==39.7 tok/s== on a laptop, and agents that run on it.",
     when: "2026",
-    tags: ["Software"],
     cover: img("autopilot-plan.jpg", 1600, 928, "Control panel showing a goal broken into a checklist of completed steps."),
     stamp: ["39.7 tok/s median, 262k context", "one laptop, no cloud"],
     specs: [
@@ -742,7 +734,6 @@ const all = [
     title: "Atombot, Z Lab",
     line: "Research assistant building swarm and wheel-legged robots on a 25+ person team. Details under NDA.",
     when: "2025 to 2026",
-    tags: ["Research", "Mechanical", "Software"],
     cover: { plate: ["Atombot", "Details are under NDA"] },
     specs: [
       ["Role", "Undergraduate research assistant"],
@@ -781,7 +772,6 @@ const all = [
     title: "FIRST Robotics Team 2915",
     line: "Went from new member to captain, design lead and CAD lead. ==Creativity Award==, 2022.",
     when: "2021 to 2025",
-    tags: ["Mechanical", "Teaching"],
     cover: img("frc-robot-build.jpg", 1400, 2334, "A competition robot frame with a tall elevator, belt spools and wiring, on a workshop floor."),
     stamp: ["Team 2915, Pandamonium", "four seasons of competition"],
     specs: [
@@ -848,7 +838,6 @@ const all = [
     title: "Michigan Baja Racing",
     line: "Suspension subteam. Rebuilt the CVTs on several of the team's off-road cars.",
     when: "2026 to now",
-    tags: ["Mechanical"],
     cover: { plate: ["Baja", "Suspension subteam"] },
     specs: [["Role", "Team member, suspension"], ["Where", "University of Michigan"]],
     detail: "Took the CVTs apart, rebuilt them and worked through how they are designed.",
@@ -860,7 +849,6 @@ const all = [
     title: "MASA rocketry",
     line: "Designed landing pad parts in Siemens NX and Fusion 360.",
     when: "2025 to 2026",
-    tags: ["Mechanical"],
     cover: { plate: ["MASA", "CAD team"] },
     specs: [["Role", "CAD team member"], ["Where", "Michigan Aeronautical Science Association"]],
     detail: "CAD team member on the landing pad subsystem.",
