@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Media } from "./Media.jsx";
 import { rich } from "./rich.jsx";
 import { openProject, useMedia } from "../hooks.js";
-import { me, groups, filters, items } from "../data/content.jsx";
+import { me, groups, items } from "../data/content.jsx";
 
 function Preview({ item }) {
   return (
@@ -90,7 +90,7 @@ function Row({ item, active, onActive, wide }) {
     >
       <button
         type="button"
-        className={"row" + (active ? " is-active" : "")}
+        className={"row" + (active ? " is-active" : "") + (!wide && item.cover.plate ? " row--nothumb" : "")}
         onPointerEnter={(e) => {
           if (e.pointerType !== "mouse") return;
           clearTimeout(hoverTimer);
@@ -102,7 +102,7 @@ function Row({ item, active, onActive, wide }) {
         data-row={item.id}
         data-brief={item.blocks.length ? undefined : ""}
       >
-        {!wide && (
+        {!wide && !item.cover.plate && (
           <motion.span className="row__thumb" layoutId={"cover-" + item.id}>
             <Media media={item.cover} still />
           </motion.span>
@@ -120,30 +120,9 @@ function Row({ item, active, onActive, wide }) {
 
 export default function Cover({ hidden }) {
   const wide = useMedia("(min-width: 1000px)");
-  const still = useMedia("(prefers-reduced-motion: reduce)");
-  const [filter, setFilter] = useState("All");
-  const [active, setActive] = useState(items[0].id);
-  const [touched, setTouched] = useState(false);
-  const shown = items.filter((it) => filter === "All" || it.tags.includes(filter));
-  const current = shown.find((it) => it.id === active) || shown[0];
-  const timer = useRef(null);
-
-  // Until someone points at the list, step through it so the page shows what is here.
-  useEffect(() => {
-    if (touched || still || !wide || hidden) return;
-    timer.current = setInterval(() => {
-      setActive((id) => {
-        const i = shown.findIndex((it) => it.id === id);
-        return shown[(i + 1) % shown.length].id;
-      });
-    }, 4200);
-    return () => clearInterval(timer.current);
-  }, [touched, still, wide, hidden, shown.length, filter]);
-
-  const pick = (id) => {
-    setTouched(true);
-    setActive(id);
-  };
+  const [active, setActive] = useState(items.find((it) => it.group === groups[0].id)?.id ?? items[0].id);
+  const current = items.find((it) => it.id === active) || items[0];
+  const pick = (id) => setActive(id);
 
   return (
     <main className="cover sheet" id="top" inert={hidden || undefined}>
@@ -151,6 +130,7 @@ export default function Cover({ hidden }) {
         <div className="cover__who">
           <h1>{me.name}</h1>
           <p className="cover__say">{me.say}</p>
+          <p className="cover__avail">{me.note}</p>
         </div>
         <div className="cover__aside">
           <p className="cover__meta">{me.meta}</p>
@@ -161,7 +141,6 @@ export default function Cover({ hidden }) {
       <div className="cover__main">
         <div
           className="cover__list"
-          onPointerMove={() => !touched && setTouched(true)}
           onKeyDown={(e) => {
             if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
             const rows = [...e.currentTarget.querySelectorAll(".row")];
@@ -171,27 +150,9 @@ export default function Cover({ hidden }) {
             rows[(at + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length].focus();
           }}
         >
-          <div className="filters" role="group" aria-label="Filter by kind of work">
-            {["All", ...filters].map((f) => (
-              <button
-                key={f}
-                type="button"
-                className={"filters__b" + (filter === f ? " is-on" : "")}
-                aria-pressed={filter === f}
-                onClick={() => {
-                  setFilter(f);
-                  setTouched(true);
-                }}
-              >
-                {f}
-                {filter === f && <motion.span layoutId="filter-mark" className="filters__mark" />}
-              </button>
-            ))}
-          </div>
-
           {wide && <p className="cover__hint">Hover a row to preview it. Click to open the full write-up.</p>}
           {groups.map((g) => {
-            const rows = shown.filter((it) => it.group === g.id);
+            const rows = items.filter((it) => it.group === g.id);
             if (!rows.length) return null;
             return (
               <section key={g.id} aria-labelledby={"g-" + g.id}>
@@ -211,7 +172,7 @@ export default function Cover({ hidden }) {
         </div>
 
         {wide && current && (
-          <aside className="cover__preview" aria-label="Preview of the highlighted item" onPointerEnter={() => setTouched(true)}>
+          <aside className="cover__preview" aria-label="Preview of the highlighted item">
             <Preview item={current} />
           </aside>
         )}

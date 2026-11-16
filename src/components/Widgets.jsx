@@ -281,7 +281,7 @@ export function RunTimeline() {
       </div>
       <div className="w-run__axis"><span>0</span><span>{mmss(total)}</span></div>
       <div className="w-run__detail" aria-live="polite">
-        <h4>{sel + 1}. {GOALS[sel][0]}</h4>
+        <p className="w-h">{sel + 1}. {GOALS[sel][0]}</p>
         <p className="w-run__time">{mmss(GOALS[sel][1])}, {Math.round((GOALS[sel][1] / total) * 100)}% of the run</p>
         {GOALS[sel][2] && <p>{GOALS[sel][2]}</p>}
       </div>
@@ -502,12 +502,12 @@ export function SwarmLink() {
 
         <ol className="w-hops">
           <li>
-            <h4>Laptop to drone {active + 1}, over WiFi</h4>
+            <p className="w-h">Laptop to drone {active + 1}, over WiFi</p>
             <p className="w-small">A UDP text packet to port 2390, through the class's ESP8266 access point.</p>
             <pre>{udp}</pre>
           </li>
           <li>
-            <h4>Arduino to flight controller, over serial</h4>
+            <p className="w-h">Arduino to flight controller, over serial</p>
             <p className="w-small">The Arduino Nano 33 IoT on the drone rebuilds it as an MSP_SET_RAW_RC frame at 9600 baud.</p>
             <div className="w-frame">
               {head.map((b, i) => <span key={"h" + i} className="w-frame__h">{H(b)}</span>)}
@@ -522,7 +522,7 @@ export function SwarmLink() {
             <p className="w-small">Header $M&lt;, 16 data bytes, command 200, eight channels low byte first, XOR checksum.</p>
           </li>
           <li>
-            <h4>What INAV does with it</h4>
+            <p className="w-h">What INAV does with it</p>
             <p className="w-say" aria-live="polite">
               {kill
                 ? "Kill switch on. Channel 8 reads 1700, and the base station stops reading the stick."
@@ -585,7 +585,7 @@ export function ModelLog() {
         ))}
       </ul>
       <div className="w-models__detail" aria-live="polite">
-        <h4>{MODELS[sel].name}</h4>
+        <p className="w-h">{MODELS[sel].name}</p>
         <p className="w-run__time">{MODELS[sel].range}</p>
         <p className="w-small">{MODELS[sel].how}</p>
         <p>{MODELS[sel].note}</p>

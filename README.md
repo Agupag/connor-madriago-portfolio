@@ -20,7 +20,7 @@ short write-ups, interactive widgets and 3D models.
 | `src/data/sketches.jsx` | Inline SVG diagrams |
 | `src/data/tracker-run.json` | Per-frame data for the tracker confidence chart |
 | `src/App.jsx` | Header, index, footer and the project sheet overlay |
-| `src/components/Cover.jsx` | The index: filters, rows and the preview pane |
+| `src/components/Cover.jsx` | The index: groups, rows and the preview pane |
 | `src/components/Sheet.jsx` | Renders a project sheet from its blocks |
 | `src/components/Media.jsx` | Images, loop videos, annotated figures and the enlarge view |
 | `src/components/ModelViewer.jsx` | three.js viewer for the GLB models |

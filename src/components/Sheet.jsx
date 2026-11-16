@@ -4,6 +4,9 @@ import { Figure } from "./Media.jsx";
 import { rich } from "./rich.jsx";
 import { openProject, useMedia } from "../hooks.js";
 import { sketches } from "../data/sketches.jsx";
+import { me } from "../data/content.jsx";
+
+const emailHref = (me.links.find(([k]) => k === "Email") || [])[2];
 
 const ModelViewer = lazy(() => import("./ModelViewer.jsx"));
 const Widget = lazy(() => import("./Widgets.jsx").then((m) => ({ default: ({ id }) => { const W = m.widgets[id]; return <W />; } })));
@@ -11,7 +14,7 @@ const Widget = lazy(() => import("./Widgets.jsx").then((m) => ({ default: ({ id 
 function Text({ block }) {
   return (
     <div className={"say" + (block.wrong ? " say--wrong" : "")}>
-      {block.title && <h3>{block.title}</h3>}
+      {block.title && <h2>{block.title}</h2>}
       {block.body.map((b, i) =>
         typeof b === "string" ? (
           <p key={i}>{rich(b)}</p>
@@ -56,7 +59,7 @@ function Check({ block }) {
 function Specs({ block }) {
   return (
     <div className="specs">
-      {block.title && <h3>{block.title}</h3>}
+      {block.title && <h2>{block.title}</h2>}
       <dl>
         {block.rows.map(([k, v]) => (
           <div key={k}>
@@ -115,14 +118,23 @@ function Block({ block, num }) {
     case "code":
       return (
         <div className="code">
-          {block.title && <h3>{block.title}</h3>}
+          {block.title && <h2>{block.title}</h2>}
           <pre tabIndex={0}>
             <code>{block.code}</code>
           </pre>
           {block.note && <p className="code__note">{rich(block.note)}</p>}
         </div>
       );
-    case "cols":
+    case "cols": {
+      const prose = (b) => b.type === "text" || (b.type === "stack" && b.items.every((x) => x.type === "text"));
+      if (block.items.every(prose))
+        return (
+          <div className="prose-col">
+            {block.items.map((b, i) => (
+              <Block key={i} block={b} num={num} />
+            ))}
+          </div>
+        );
       return (
         <div className={"cols" + (block.wide ? " cols--wide-" + block.wide : "")}>
           {block.items.map((b, i) => (
@@ -130,6 +142,7 @@ function Block({ block, num }) {
           ))}
         </div>
       );
+    }
     case "stack":
       return (
         <div className="stack">
@@ -221,14 +234,14 @@ export default function Sheet({ item, items }) {
 
   // Section list for the side column, read from the headings actually on the page.
   useEffect(() => {
-    const hs = [...(body.current?.querySelectorAll("h3, caption") || [])];
+    const hs = [...(body.current?.querySelectorAll("h2, caption") || [])];
     setSections(hs.map((h, k) => ({ k, label: h.textContent })));
   }, [item.id]);
   const [here, setHere] = useState(0);
   // Highlight the section currently being read.
   useEffect(() => {
     const root = scroller.current;
-    const hs = [...(body.current?.querySelectorAll("h3, caption") || [])];
+    const hs = [...(body.current?.querySelectorAll("h2, caption") || [])];
     if (!root || !hs.length) return;
     const onScroll = () => {
       const top = root.getBoundingClientRect().top + 140;
@@ -243,7 +256,7 @@ export default function Sheet({ item, items }) {
     return () => root.removeEventListener("scroll", onScroll);
   }, [item.id, sections.length]);
   const jump = (k) => {
-    const hs = body.current?.querySelectorAll("h3, caption");
+    const hs = body.current?.querySelectorAll("h2, caption");
     hs?.[k]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -288,6 +301,9 @@ export default function Sheet({ item, items }) {
           <span className="layer__where">
             {i + 1} of {items.length}
           </span>
+          <a className="textb" href={emailHref}>
+            Email
+          </a>
           <button type="button" className="textb" onClick={() => openProject(prev.id)}>
             Previous
           </button>
@@ -321,8 +337,8 @@ export default function Sheet({ item, items }) {
             ))}
           </dl>
           {sections.length > 2 && (
-            <nav className="toc" aria-label="On this page">
-              <h2>On this page</h2>
+            <nav className="toc" aria-label="Sections on this page">
+              <p className="toc__label">On this page</p>
               <ul>
                 {sections.map((s) => (
                   <li key={s.k} className={here === s.k ? "is-here" : ""}>

@@ -6,6 +6,19 @@ import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 
+// True once the element is within 300 px of the viewport (stays true after).
+function useNear(ref) {
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: "300px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, near]);
+  return near;
+}
+
 const cssColor = (name) => new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue(name).trim());
 
 // Draws a CAD model the way a drafter would: paper-coloured faces, ink edges.
@@ -15,8 +28,11 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
   const tags = useRef([]);
   const [state, setState] = useState("loading");
   const [moved, setMoved] = useState(false);
+  // Do not fetch the model until the viewer is near the screen.
+  const near = useNear(wrap);
 
   useEffect(() => {
+    if (!near) return;
     const el = wrap.current;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -163,7 +179,7 @@ export default function ModelViewer({ src, notes = [], zUp = true, alt, interact
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [src, zUp, interactive, look]);
+  }, [src, zUp, interactive, look, near]);
 
   return (
     <div ref={wrap} className="model">

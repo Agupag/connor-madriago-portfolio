@@ -1,15 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, MotionConfig } from "motion/react";
 import Cover from "./components/Cover.jsx";
 import Sheet from "./components/Sheet.jsx";
 import { useRoute } from "./hooks.js";
 import { me, items } from "./data/content.jsx";
 
-function Header({ redlines, setRedlines, theme, setTheme }) {
+const email = me.links.find(([k]) => k === "Email");
+const emailHref = email ? email[2] : "";
+
+function Header({ onIndex }) {
+  const [titleOnScreen, setTitleOnScreen] = useState(false);
+  // On the index, the name in the bar stays hidden while the page's own H1 is showing.
+  useEffect(() => {
+    if (!onIndex) return;
+    const h1 = document.querySelector(".cover h1");
+    if (!h1) return;
+    const io = new IntersectionObserver(([e]) => setTitleOnScreen(e.isIntersecting));
+    io.observe(h1);
+    return () => io.disconnect();
+  }, [onIndex]);
+  const hideName = onIndex && titleOnScreen;
   return (
     <header className="top">
       <div className="sheet top__row">
-        <a className="top__name" href="#/">
+        <a className="top__name" href="#/" style={hideName ? { visibility: "hidden" } : undefined}>
           {me.name}
         </a>
         <button
@@ -19,27 +33,31 @@ function Header({ redlines, setRedlines, theme, setTheme }) {
         >
           Contact
         </button>
-        <button type="button" className="textb top__opt" aria-pressed={theme === "blueprint"} onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}>
-          Blueprint {theme === "blueprint" ? "on" : "off"}
-        </button>
-        <button type="button" className="pen top__opt" aria-pressed={redlines} onClick={() => setRedlines(!redlines)}>
-          {redlines ? "Hide redlines" : "Show redlines"}
-        </button>
-        <a className="btn" href={me.resume}>
-          Resume (PDF)
+        <a className="textb top__link" href={emailHref}>
+          Email
+        </a>
+        <a className="btn top__resume" href={me.resume}>
+          Resume<span className="top__pdf"> (PDF)</span>
         </a>
       </div>
     </header>
   );
 }
 
-function Footer({ hidden }) {
+function Footer({ hidden, theme, setTheme }) {
   return (
     <footer className="close" id="contact" inert={hidden || undefined}>
       <div className="sheet close__grid">
         <div>
           <h2>Contact</h2>
-          <p className="close__note">{me.note}</p>
+          <button
+            type="button"
+            className="close__theme"
+            aria-pressed={theme === "blueprint"}
+            onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}
+          >
+            Blueprint view
+          </button>
         </div>
         <ul className="close__links">
           {me.links.map(([k, label, href]) => (
@@ -57,8 +75,9 @@ function Footer({ hidden }) {
 export default function App() {
   const id = useRoute();
   const item = items.find((it) => it.id === id && it.blocks.length) || null;
+  const lastId = useRef(null);
+  if (item) lastId.current = item.id;
   const sheets = items.filter((it) => it.blocks.length);
-  const [redlines, setRedlines] = useState(true);
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem("theme") === "blueprint" ? "blueprint" : "print";
@@ -75,20 +94,21 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("no-redlines", !redlines);
-  }, [redlines]);
-
-  useEffect(() => {
     document.title = item ? `${item.title} · ${me.name}` : `${me.name}, mechanical engineering projects`;
   }, [item]);
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 260, damping: 30 }}>
       <LayoutGroup>
-        <Header redlines={redlines} setRedlines={setRedlines} theme={theme} setTheme={setTheme} />
+        <Header onIndex={!item} />
         <Cover hidden={!!item} />
-        <Footer hidden={!!item} />
-        <AnimatePresence>{item && <Sheet key="sheet" item={item} items={sheets} />}</AnimatePresence>
+        <Footer hidden={!!item} theme={theme} setTheme={setTheme} />
+        <AnimatePresence
+          onExitComplete={() =>
+            document.querySelector(`[data-row="${lastId.current}"]`)?.focus({ preventScroll: true })
+          }
+        >
+          {item && <Sheet key="sheet" item={item} items={sheets} />}</AnimatePresence>
       </LayoutGroup>
     </MotionConfig>
   );

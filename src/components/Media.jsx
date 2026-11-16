@@ -32,6 +32,9 @@ export function LoopVideo({ src, poster, alt, className, eager = false }) {
   );
 }
 
+// Index row thumbnails use the 240 px copies in assets/img/thumb/.
+const thumb = (src) => (src ? src.replace("assets/img/", "assets/img/thumb/") : src);
+
 export function Media({ media, eager, className, still = false }) {
   if (!media) return null;
   if (media.sketch) {
@@ -57,13 +60,13 @@ export function Media({ media, eager, className, still = false }) {
       </Suspense>
     );
   }
-  if (media.video && still) return <img className={className} src={media.poster} alt="" loading="lazy" />;
+  if (media.video && still) return <img className={className} src={thumb(media.poster)} alt="" loading="lazy" />;
   if (media.video)
     return <LoopVideo src={media.video} poster={media.poster} alt={media.alt} eager={eager} className={className} />;
   return (
     <img
       className={className}
-      src={media.img}
+      src={still ? thumb(media.img) : media.img}
       alt={media.alt || ""}
       width={media.w}
       height={media.h}

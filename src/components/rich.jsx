@@ -8,8 +8,15 @@ export function rich(text) {
   let k = 0;
   while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index));
-    if (m[1]) out.push(<mark key={k++}>{m[1]}</mark>);
-    else
+    if (m[1]) {
+      out.push(<mark key={k++}>{m[1]}</mark>);
+      // Pull punctuation that follows a highlight back against it, so "10 s;" doesn't read as "10 s ;".
+      const next = text[re.lastIndex];
+      if (next && ".,;:!?)".includes(next)) {
+        out.push(<span key={k++} className="mark-p">{next}</span>);
+        re.lastIndex += 1;
+      }
+    } else
       out.push(
         <a key={k++} href={m[3]} target={m[3].startsWith("http") ? "_blank" : undefined} rel="noreferrer">
           {m[2]}

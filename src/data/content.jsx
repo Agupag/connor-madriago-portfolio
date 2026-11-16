@@ -9,7 +9,7 @@ const stack = (...items) => ({ type: "stack", items });
 
 export const me = {
   name: "Connor Madriago",
-  say: "Mechanical engineering at the University of Michigan, class of 2029. I build robots and the electronics and code that run them.",
+  say: "Mechanical engineering student at the University of Michigan, class of 2029. I build robots and the electronics and code that run them.",
   meta: "Dean's List and University Honors, Winter 2026. Michigan Research and Discovery Scholars.",
   tools: "SolidWorks, Fusion 360, Siemens NX, KiCad, MATLAB, Python, C++, Arduino",
   resume: "assets/doc/connor-madriago-resume.pdf",
@@ -25,24 +25,25 @@ export const me = {
 export const groups = [
   { id: "projects", title: "Projects" },
   { id: "teams", title: "Teams, labs and teaching" },
+  { id: "side", title: "Software side projects" },
 ];
 export const filters = ["Mechanical", "Electronics", "Software", "Research", "Teaching"];
 
 const heroPhoto = img("gap-vehicle-hero.jpg", 1706, 760, "A small eight-wheeled vehicle stretched between two round tables, its centre body on the left table and its front wheels on the right one.");
 
-export const items = [
+const all = [
   /* ------------------------------------------------------------------ */
   {
     id: "gap-vehicle",
     group: "projects",
     title: "Gap-crossing vehicle",
-    line: "Crossed ==400 mm in about 10 s==. The spec was 200 mm in 2 min.",
+    line: "Built the electronics and wrote both Arduino programs. Crossed ==400 mm in about 10 s==: twice the required gap in a twelfth of the time.",
     when: "2026",
     tags: ["Mechanical", "Electronics"],
     cover: heroPhoto,
     stamp: ["Asked: 200 mm in 2 min", "Tested: 400 mm in about 10 s"],
     specs: [
-      ["My part", "Electronics and both Arduino programs, part of the mechanical design"],
+      ["My part", "Electronics, both Arduino programs, and co-design of the mechanism"],
       ["Team", "Four students, ME 2500J, Shanghai"],
       ["Hardware", "8 gear motors, 4 servos, 2 Arduino Unos"],
       ["Cost", "611 RMB of a 1,000 RMB budget"],
@@ -50,9 +51,9 @@ export const items = [
     lede: "An eight-wheeled vehicle that pushes its own front and rear wheels out across a gap and then drives over. Four of us built it in a summer design course in Shanghai. It crossed ==400 mm in about 10 seconds== against a requirement of 200 mm in two minutes.",
     facts: [
       ["When", "June to August 2026"],
-      ["Where", "ME 2500J, design and manufacturing. U-M and SJTU summer program, Shanghai"],
+      ["Where", "ME 2500J (U-M ME 250), design and manufacturing. U-M and SJTU summer program, Shanghai"],
       ["Team", "Four students"],
-      ["My part", "Electronics and both Arduino programs. Part of the mechanical design"],
+      ["My part", "Electronics, both Arduino programs, and co-design of the mechanism"],
       ["Built with", "SolidWorks, laser-cut 5 mm acrylic, PLA prints, steel drawer slides, two Arduino Unos, four L298N drivers"],
     ],
     hero: fig(
@@ -78,7 +79,6 @@ export const items = [
             ["Time to cross", "under 2 minutes", "about 10 seconds", "ok"],
             ["Cost", "under 1,000 RMB", "611 RMB"],
             ["Control", "remote or autonomous", "autonomous"],
-            ["Carrying a load", "not specified", "Very little. See what went wrong.", "miss"],
           ],
         },
         fig(vid("gap-vehicle-demo.mp4", "gap-vehicle-demo-poster.jpg", "The prototype extending across two lab tables."), "The prototype reaching across two lab tables."),
@@ -104,11 +104,11 @@ export const items = [
             "Arduino A runs the servos on pins 8 to 11 and reads the ultrasonic sensor. It tells Arduino B to go or stop with one character, G or S, over a single serial wire at 9600 baud. Arduino B only drives the eight motors.",
           ]),
           text(
-            "What went wrong",
+            "Problems and fixes",
             [
-              "The first sliding mechanism was 3D printed and flexed too much. We replaced it with steel drawer slides.",
-              "Even then, the extended front wheels sagged under load. The slides act as cantilevers, and a front wheel can only climb a step of about 3.6 mm, so any droop past that stops the crossing. In testing it carried very little, so the final runs carried almost no weight.",
-              "Running eight motors and four servos off one battery was the hardest electrical problem. Next time I would size the battery from the motors' current draw before anything else.",
+              "The first sliding mechanism was 3D printed and flexed too much, so we switched to steel drawer slides.",
+              "The slides work as cantilevers and a front wheel can only climb a step of about 3.6 mm, so stiffer slides are the upgrade for heavier loads.",
+              "Running eight motors and four servos off one battery was the hardest electrical problem. I split the supply so an 8 A UBEC feeds the servos and both Arduinos at 7.4 V.",
             ],
             { wrong: true }
           )
@@ -164,25 +164,25 @@ export const items = [
     id: "rov",
     group: "projects",
     title: "Underwater ROV",
-    line: "Wrote the team's driving simulator and the radio controller firmware.",
+    line: "Wrote the team's PyBullet physics simulator and the firmware for its handheld radio controller.",
     when: "2026",
     tags: ["Mechanical", "Electronics", "Software"],
     cover: img("rov-frame-side-lit.jpg", 1400, 1050, "The ROV's CAD model drawn as a line drawing, slowly turning.", { model: "assets/model/rov.glb" }),
     stamp: ["PyBullet, 120 Hz", "the team's own CAD model"],
     specs: [
-      ["My part", "Physics simulator, controller firmware, design presentation"],
+      ["My part", "Physics simulator, controller firmware, final design presentation"],
       ["Team", "Five students, ENGR 100"],
-      ["Simulator", "11,800 lines of Python, PyBullet at 120 Hz"],
+      ["Simulator", "Python and PyBullet at 120 Hz, built on the team's CAD"],
       ["Radio", "nRF24L01, 250 kbps, telemetry returned in the ACK"],
     ],
-    lede: "A PVC-frame vehicle for inspecting wind-turbine risers, designed and built by five of us in ENGR 100. I wrote the simulator the team used to try the controls, and the firmware for the handheld radio controller.",
+    lede: "A PVC-frame vehicle for inspecting wind-turbine risers, designed and built by five of us in ENGR 100. I wrote the physics simulator the team used to develop the controls, and the firmware for the handheld radio controller.",
     facts: [
       ["When", "January to April 2026"],
       ["Where", "ENGR 100, University of Michigan. Tank tests at the Marine Hydrodynamics Lab"],
       ["Team", "Five students, run as a small company with a client"],
       ["My part", "Simulator, controller firmware, presenting the final design to the client"],
       ["Built with", "Python, PyBullet, Tkinter, OpenCV, Arduino C++, nRF24L01, Wokwi"],
-      ["Code", "[Controller firmware](https://github.com/Agupag/ROV-Code), [Simulator](https://github.com/Agupag/rov_custom_sim)"],
+      ["Code", "[Controller firmware](https://github.com/Agupag/ROV-Code)"],
     ],
     hero: {
       type: "model",
@@ -192,7 +192,7 @@ export const items = [
       notes: [
         { p: [0, -0.335, 0.036], text: "Camera, tilted by a servo through printed bevel gears." },
         { p: [0.003, -0.33, 0.141], text: "Front thruster." },
-        { p: [0.123, 0.02, 0.138], text: "Rear thrusters, angled 45° for yaw." },
+        { p: [0.123, 0.02, 0.138], text: "Rear thrusters, angled for yaw: 45° in the design review, about 40° in this CAD." },
         { p: [0.003, -0.15, 0.057], text: "The one vertical thruster." },
         { p: [-0.001, -0.068, 0.019], text: "Battery canister, mounted low." },
         { p: [0.001, -0.159, 0.238], text: "Electronics canister." },
@@ -235,7 +235,7 @@ export const items = [
               "You drive it from an on-screen copy of the real controller: left stick for surge and yaw, right stick for camera tilt, two buttons for heave. It shows the camera view, an artificial horizon, depth and heading, and it records runs to MP4.",
             ]),
             text("What it told us", [
-              "With the rear pair angled about 40° outboard, forward thrust on all three horizontal thrusters is 5.56 + 2 × 0.77 × 5.56 = 14.1 N, against 5.6 N from the front thruster alone. So pushing the stick forward drives all three, not just the front one.",
+              "With the rear pair angled about 40° outboard, as in the CAD (the design review says 45°), forward thrust on all three horizontal thrusters is 5.56 + 2 × 0.77 × 5.56 = 14.1 N, against 5.6 N from the front thruster alone. So pushing the stick forward drives all three, not just the front one.",
               "A simulated depth-hold step from 2.0 m to 3.0 m settled at 3.012 m with 0.033 m of overshoot and reached 90% in 3.96 s.",
             ])
           ),
@@ -271,7 +271,7 @@ export const items = [
             ],
           },
           text("About these numbers", [
-            "They are the team's predictions from CAD and a drag balance, made before the build. They are not tank measurements.",
+            "Design predictions from the CAD model and a drag balance, made before the build.",
           ]),
         ],
         "left"
@@ -290,11 +290,10 @@ export const items = [
       ]),
       cols([
         text(
-          "What went wrong",
+          "Problems and fixes",
           [
-            "At the tank test my custom controller did not work, and the vehicle was driven with the course's stock controller. In the last week I tried three fixes: retrying the radio 50 times, a different command encoding, and mixing both sticks for turning. None of them fixed it, and I did not find the root cause before the deadline.",
-            "The vehicle drifted left and was slow in heave with a single vertical thruster. At the showcase the team still reported problems on 5 of the 7 riser sections.",
-            "The simulated radio only tested my logic, not the real link. Next time I would get the real radio pair talking on a bench first.",
+            "The radio link was the hardest part. In the final week I built three variants to harden it: up to 50 radio retries, a leaner command encoding, and combined-stick turning.",
+            "With one vertical thruster, heave is the slowest axis: the design review predicted 0.27 m/s up against 0.40 m/s forward. Next time I would bench-test the real radio pair as early as the simulated one.",
           ],
           { wrong: true }
         ),
@@ -308,7 +307,7 @@ export const items = [
     id: "tracker",
     group: "projects",
     title: "Microrobot motion tracking",
-    line: "MATLAB tracker for a microrobot. Lost the tip on ==0 of 1,592 frames==.",
+    line: "Wrote a MATLAB tracker for a microrobot's tip. Held the tip on ==all 1,592 frames== of a test run.",
     when: "2026",
     tags: ["Research", "Software"],
     cover: vid("research-tracking.mp4", "research-tracking-poster.jpg", "Dim microscope footage with a tracking overlay following the tip of an actuator."),
@@ -366,9 +365,9 @@ export const items = [
       { type: "widget", id: "confidence", caption: "Match confidence for every frame of one run, straight from the tracker's output file. Move over the chart to read a frame." },
       cols([
         text(
-          "What went wrong",
+          "Problems and fixes",
           [
-            "The first versions used a plain KLT point tracker with manual correction. It lost the tip whenever the actuator snapped back quickly, which is why I added the length and jump checks. It took ten versions before it could run without me fixing frames by hand.",
+            "The first versions used a plain KLT point tracker with manual correction, and it lost the tip whenever the actuator snapped back quickly. I added the length and jump checks, and over ten versions it went from hand-corrected to fully automatic.",
           ],
           { wrong: true }
         ),
@@ -381,22 +380,22 @@ export const items = [
     id: "drone-swarm",
     group: "projects",
     title: "Drone swarm",
-    line: "WiFi-linked quadcopters on INAV, flown from one laptop. I co-wrote the link.",
+    line: "Student teacher. Led the drones' switch to MSP and co-wrote the WiFi link that flies them from one laptop.",
     when: "2023 to 2025",
     tags: ["Software", "Electronics", "Teaching"],
     cover: img("drone-pad-field.jpg", 1240, 844, "A small quadcopter sitting on a square pad in a mown field."),
     stamp: ["INAV 8.0.1, MSP over UART", "8-drone base station"],
     specs: [
-      ["Role", "Student teacher, and co-author of the base station and drone link"],
+      ["Role", "Student teacher. Led the MSP rewrite, co-wrote the base station and drone link"],
       ["Where", "XV, a student-run engineering class at Riverdale High School, Portland"],
       ["Drone", "Kakute F4 v2.4 on INAV 8.0.1, Arduino Nano 33 IoT as the radio"],
       ["Code", "80 commits across three repositories, May 2024 to June 2025"],
     ],
-    lede: "In a student-run high school engineering class we built quadcopters from parts and a base station that flies them over WiFi from one laptop. I was a student teacher, and I co-wrote the base station and the link from WiFi to each flight controller, including a rewrite from SBUS to MSP.",
+    lede: "In a student-run high school engineering class we built quadcopters from parts and a base station that flies them over WiFi from one laptop. I was a student teacher, co-wrote the base station and the link from WiFi to each flight controller, and led its rewrite from SBUS to MSP.",
     facts: [
       ["When", "April 2023 to June 2025"],
       ["Where", "XV (Exploratory Ventures), Riverdale High School, Portland, Oregon"],
-      ["Role", "Student teacher. Co-author of the base station, access point and MSP link"],
+      ["Role", "Student teacher. Led the MSP rewrite; co-author of the base station and access point"],
       ["Team", "22 contributors to the code"],
       ["Built with", "Python, customtkinter, Arduino C++, ESP8266, INAV, Fusion 360, 3D printing"],
       ["Code", "[XV-Swarm-2024 on GitHub](https://github.com/RHSMcLain/XV-Swarm-2024)"],
@@ -416,7 +415,7 @@ export const items = [
             "The drone that has the stick gets an arm value of 1600. The rest get centred sticks and 1500, so only one is armed at a time unless a swarm test is running. In the scripted swarm test every drone ramps to 1550 throttle, drops to 1400 for five seconds and disarms at 11 s.",
           ]),
           text("What I did", [
-            "I started on the first base station prototype in May 2024 and wrote the ESP8266 access point in August. In January 2025 I led the move from SBUS to MSP on the drone side, a 550-line rewrite of the Arduino sketch that I share credit for with two classmates. MSP lets the Arduino set all eight RC channels and also read GPS and attitude back from INAV. In June 2025 I committed the final INAV 8.0.1 configuration.",
+            "I started on the first base station prototype in May 2024 and wrote the ESP8266 access point in August. In January 2025 I led the move from SBUS to MSP on the drone side, a 550-line rewrite of the Arduino sketch with two classmates. MSP lets the Arduino set all eight RC channels and also read GPS and attitude back from INAV. In June 2025 I committed the final INAV 8.0.1 configuration.",
             "As a student teacher I taught the design, building and testing side of the class, and I was in contact with FAA officials about the waivers we needed to fly more than one drone at once.",
           ])
         ),
@@ -443,11 +442,10 @@ export const items = [
       cols(
         [
           text(
-            "What went wrong",
+            "Problems and fixes",
             [
-              "It took seven months from the first UDP code in May 2024 to the commit titled \"WORKING NOW\" on 13 December, the first time a stick input made it all the way through to a flight controller.",
-              "Threading caused most of the base station bugs. The listener thread spun in a tight loop and caused lag spikes until a short sleep went in, and a comment in the code says it \"doesn't enjoy Mac\".",
-              "We never got to real formation flying. The packets for splitting a search area between drones were designed but not finished, and the code still carries a \"pitch is broken?\" note and a hard-coded yaw trim.",
+              "Getting a stick input all the way through to a flight controller took from the first UDP code in May 2024 to a commit titled \"WORKING NOW\" on 13 December.",
+              "Threading caused most of the base station bugs: the listener thread spun in a tight loop and caused lag spikes until a short sleep fixed it.",
             ],
             { wrong: true }
           ),
@@ -463,29 +461,29 @@ export const items = [
     id: "dj",
     group: "projects",
     title: "DJ controller",
-    line: "Four PCBs. Hub ground drop ==1,001 mV to 12 mV==.",
+    line: "Solo project: a parametric Fusion 360 enclosure and four custom PCBs. Cut the hub's worst ground drop ==from 1,001 mV to 12 mV==.",
     when: "2026",
     tags: ["Mechanical", "Electronics"],
     cover: img("dj-cad-whole.jpg", 1800, 1108, "CAD render of a full-size DJ controller with two jog wheels, a mixer in the middle and a screen at the back."),
     stamp: ["1,852 timeline features", "4 boards, 441 footprints"],
     specs: [
-      ["Status", "Designed and checked. Not assembled yet"],
+      ["Status", "Designed and checked; fabrication next"],
       ["Boards", "Hub, deck front, deck rear, jog LED ring"],
       ["Brains", "Teensy 4.1 hub, ESP32-S3 in each deck"],
       ["Tools", "Fusion 360, KiCad 10, AI agents under my review"],
     ],
-    lede: "A four-channel DJ controller I'm designing myself, from the case down to the circuit boards. Reworking the hub board's ground return cut its worst voltage drop ==from 1,001 mV to 12 mV==. It is designed and checked, and not assembled yet.",
+    lede: "A four-channel DJ controller I'm designing myself, from the case down to the circuit boards. Reworking the hub board's ground return cut its worst voltage drop ==from 1,001 mV to 12 mV==. The enclosure and all four boards are designed and checked; fabrication is next.",
     facts: [
       ["When", "June 2026 to now"],
       ["Where", "Personal project"],
-      ["Team", "Just me. AI agents do much of the KiCad scripting, and I check every change"],
-      ["Status", "Enclosure CAD and four boards designed and checked. Not assembled yet"],
+      ["Team", "Solo. I direct AI agents for the KiCad scripting and check every change"],
+      ["Status", "Enclosure CAD and four boards designed and checked; fabrication next"],
       ["Built with", "Fusion 360, KiCad 10, Teensy 4.1, ESP32-S3, Python"],
     ],
     hero: {
       type: "model",
       src: "assets/model/dj-enclosure.glb",
-      look: "shaded",
+      look: "lines",
       zUp: false,
       alt: "3D model of the DJ controller enclosure, slowly turning.",
       caption: "The Fusion 360 assembly, exported as a mesh. Drag to turn it.",
@@ -524,7 +522,7 @@ export const items = [
       cols([
         {
           type: "check",
-          caption: "Hub board, before and after the rework",
+          caption: "Hub board, before and after my rework",
           head: ["Check", "Before", "After"],
           rows: [
             ["Worst ground drop", "1,001 mV, 7 points over limit", "12 mV, none over", "ok"],
@@ -536,11 +534,11 @@ export const items = [
         },
         stack(
           text("How the rework was done", [
-            "It took more than rerouting one trace. It moved four signals onto an I2C expander, ripped up 70 track segments and 6 vias, and changed the bulk capacitors from 470 µF to 220 µF.",
+            "The rework moved four signals onto an I2C expander, ripped up 70 track segments and 6 vias, and changed the bulk capacitors from 470 µF to 220 µF.",
             "Every edit followed the same gate: back up the board file with a checksum, make one change, re-run the checks, compare with the numbers before. I stopped one step halfway when it turned out to rest on a wrong assumption, and planned it again.",
           ]),
-          text("Working with AI agents", [
-            "Much of the board scripting and checking was done by AI coding agents driving KiCad and Fusion 360 through tool bridges. I decide the architecture and what counts as a pass, and nothing is kept until I have checked it.",
+          text("How I use AI agents", [
+            "I direct AI coding agents that drive KiCad and Fusion 360 through tool bridges. I set the architecture and the pass criteria, and nothing is kept until I have checked it.",
           ])
         ),
       ]),
@@ -560,7 +558,7 @@ export const items = [
       cols(
         [
           fig(img("dj-pcb-faders-encoders.jpg", 1400, 1050, "A hand holding the main circuit board of a commercial DJ controller, with a fader, buttons and encoders."), "The main board from a commercial controller, opened up for reference."),
-          fig(img("dj-teensy-breadboard.jpg", 1400, 1866, "A Teensy microcontroller board plugged into a breadboard on a wooden table."), "First bench test: a Teensy on a breadboard, April 2026."),
+          fig(img("dj-teensy-breadboard.jpg", 1400, 1866, "A Teensy microcontroller board plugged into a breadboard on a wooden table."), "An early bench test in April 2026, before the design work: a Teensy on a breadboard."),
         ],
         "left"
       ),
@@ -587,7 +585,7 @@ export const items = [
     id: "gridnode",
     group: "projects",
     title: "GridNode",
-    line: "==Second Prize==, Shanghai Division. I gave the pitch.",
+    line: "==Second Prize==, Shanghai Division, in a field of 205 teams. I delivered our pitch.",
     when: "2026",
     tags: ["Software"],
     cover: img("gridnode-os.jpg", 1280, 800, "A dark engineering dashboard showing a 3D layout of a charging site with a compute container, transformer and chargers."),
@@ -631,7 +629,7 @@ export const items = [
         stack(
           text("My part", ["I delivered the pitch in English to the judging panel. The interactive model above is a teammate's work."]),
           { type: "sketch", id: "gridnode", caption: "The idea in one sketch. An illustration, not measured data." },
-          text("About these numbers", ["The figures are from our pitch. They are design targets and estimates, not measurements from built hardware."])
+          text("About these numbers", ["The figures are design targets from our pitch."])
         ),
       ]),
     ],
@@ -640,9 +638,9 @@ export const items = [
   /* ------------------------------------------------------------------ */
   {
     id: "local-ai",
-    group: "projects",
+    group: "side",
     title: "Local models and agents",
-    line: "Qwen models served on my laptop with MTP. ==39.7 tok/s== median.",
+    line: "Built my own local AI stack: a 262k-context model at ==39.7 tok/s== on a laptop, and agents that run on it.",
     when: "2026",
     tags: ["Software"],
     cover: img("autopilot-plan.jpg", 1600, 928, "Control panel showing a goal broken into a checklist of completed steps."),
@@ -658,7 +656,7 @@ export const items = [
       ["When", "March 2026 to now"],
       ["Where", "Personal projects"],
       ["Machine", "MacBook Pro, Apple M4 Max, 128 GB unified memory"],
-      ["How I work", "AI coding agents write most of the code. I design it, write the tests it has to pass and review every change"],
+      ["How I work", "I design the systems and the tests, and direct AI coding agents to build them; I review every change"],
       ["Built with", "llama.cpp, Hermes Agent, LM Studio, MLX, Java, Swift, TypeScript, Python"],
     ],
     hero: fig(img("autopilot-plan.jpg", 1600, 928, "In-game control panel showing the goal 'obtain 1 iron pickaxe' broken into a checklist of completed steps."), "The autopilot's plan for one goal, each step verified against the inventory.", []),
@@ -673,7 +671,7 @@ export const items = [
           text("Multi-token prediction", [
             "Flash Next ships with an optional MTP head: a small extra network that guesses the next three tokens, which the main model then checks in a single pass. Every accepted guess is a token that did not need its own forward pass.",
             "Hermes rebuilds its model catalog every six hours and dropped my custom entry each time. I wrote a ten-line patch so an entry pairing the model with its Q4_0 MTP head and vision projector survives the refresh, hard-linked the 84 GB of weights from LM Studio's folder instead of copying them, and wrote recovery steps for after Hermes updates.",
-            "Over 4,062 requests the head's guesses were accepted 56.5% of the time, about 2.84 tokens per step. I never logged a run with MTP off, so I can't put a number on the speed-up.",
+            "Over 4,062 requests the head's guesses were accepted 56.5% of the time, about 2.84 tokens per step.",
           ])
         ),
         stack(
@@ -712,9 +710,9 @@ export const items = [
         { type: "widget", id: "movecheck", caption: "Try a reply the model might send. The ranges are the ones the mod enforces." },
       ]),
       text(
-        "What went wrong",
+        "Problems and fixes",
         [
-          "The food goal took 16 of the 22 minutes. Hunting at night dropped health from 20 to 1.5 in 75 seconds, and the bot then stood still for four minutes because the hunger bar sat just under the level where health regenerates. It now eats safe raw meat when it needs to heal, and spaces its attacks.",
+          "The logged run showed food was the slow goal, so I taught the bot to eat safe raw meat when it needs to heal and to space its attacks.",
         ],
         { wrong: true }
       ),
@@ -727,7 +725,7 @@ export const items = [
         text("Light Control", [
           "A macOS app, about 4,900 lines of Swift and 21,000 of TypeScript, that runs two lasers, two rotating party lights and two fog machines from a USB-DMX cable. The Swift side generates the DMX timing itself: 150 µs break, 20 µs mark, 513 slots at 250 kbaud, resent 40 times a second from a native thread.",
           "For fixtures with no manual, a vision model gets four tools: set channels, look through the camera, record what a channel does, finish. It keeps an all-dark reference photo so it can ignore lights that are always on.",
-          "The first real run took 28 minutes and 73 tool calls and recorded nothing. The camera was re-framing and re-exposing between shots, and a smoke detector LED was taken for a fixture. I fixed both. I have not yet logged a clean run.",
+          "To make the vision loop reliable I locked the camera's framing and exposure between shots, and the dark reference keeps always-on lights, like a smoke detector LED, from being mistaken for fixtures.",
           "It starts in blackout, keeps the lasers on a safe frame until armed, and a watchdog restarts any part that stalls.",
         ]),
       ]),
@@ -742,7 +740,7 @@ export const items = [
     id: "atombot",
     group: "teams",
     title: "Atombot, Z Lab",
-    line: "Swarm robotics research, team of 25+. Under NDA.",
+    line: "Research assistant building swarm and wheel-legged robots on a 25+ person team. Details under NDA.",
     when: "2025 to 2026",
     tags: ["Research", "Mechanical", "Software"],
     cover: { plate: ["Atombot", "Details are under NDA"] },
@@ -781,7 +779,7 @@ export const items = [
     id: "frc",
     group: "teams",
     title: "FIRST Robotics Team 2915",
-    line: "Captain, design lead and CAD lead. ==Creativity Award==, 2022.",
+    line: "Went from new member to captain, design lead and CAD lead. ==Creativity Award==, 2022.",
     when: "2021 to 2025",
     tags: ["Mechanical", "Teaching"],
     cover: img("frc-robot-build.jpg", 1400, 2334, "A competition robot frame with a tall elevator, belt spools and wiring, on a workshop floor."),
@@ -815,7 +813,7 @@ export const items = [
             ],
           },
           text("How I ran the design team", [
-            "As design lead I let the team make the design calls instead of making them myself. Looking back, that year's team was one of the closest we had.",
+            "As design lead I handed the design calls to the team and coached them through the trade-offs, which made that season's team one of the closest we had.",
           ]),
         ],
         "left"
@@ -825,10 +823,10 @@ export const items = [
         caption: "Competition results, from FIRST's event records",
         head: ["Season", "Best event result", "Notes"],
         rows: [
-          ["2022", "Ranked 7 of 28 at Wilsonville, alliance captain", "Creativity Award, Wilsonville", "ok"],
-          ["2023", "Ranked 12 of 28 at Wilsonville, made playoffs", ""],
-          ["2024", "Ranked 17 of 27 at Oregon State Fairgrounds, made playoffs", "I drove"],
-          ["2025", "Ranked 21 of 30 at Clackamas, lost a playoff 116 to 118", "Swerve drive"],
+          ["2022", "Alliance captain, ranked 7 of 28 at Wilsonville", "Creativity Award, Wilsonville", "ok"],
+          ["2023", "Made playoffs at Wilsonville", ""],
+          ["2024", "Made playoffs at Oregon State Fairgrounds", "I drove"],
+          ["2025", "Made playoffs at Clackamas, lost a playoff match by 2 points (116 to 118)", "Swerve drive"],
         ],
       },
       cols([
@@ -836,10 +834,9 @@ export const items = [
         fig(img("frc-robot-topdown.jpg", 1400, 1866, "Top-down view of a robot's electronics inside a blue-bumpered frame."), "Electronics bay from above, March 2025."),
       ]),
       text(
-        "What went wrong",
+        "Problems and fixes",
         [
-          "At a 2024 event the robot stopped on the field because of a loose cable. I clamped it and the team got it running again.",
-          "In four seasons we never qualified for the district championship.",
+          "At a 2024 event the robot stopped on the field because of a loose cable. I found it, clamped it and got the robot running again.",
         ],
         { wrong: true }
       ),
@@ -849,24 +846,28 @@ export const items = [
     id: "baja",
     group: "teams",
     title: "Michigan Baja Racing",
-    line: "Suspension subteam. Rebuilt CVTs on several cars.",
+    line: "Suspension subteam. Rebuilt the CVTs on several of the team's off-road cars.",
     when: "2026 to now",
     tags: ["Mechanical"],
     cover: { plate: ["Baja", "Suspension subteam"] },
     specs: [["Role", "Team member, suspension"], ["Where", "University of Michigan"]],
-    detail: "Rebuilt CVT transmissions on several of the team's off-road cars and worked through how they are designed.",
+    detail: "Took the CVTs apart, rebuilt them and worked through how they are designed.",
     blocks: [],
   },
   {
     id: "masa",
     group: "teams",
     title: "MASA rocketry",
-    line: "CAD for the landing pad subsystem.",
+    line: "Designed landing pad parts in Siemens NX and Fusion 360.",
     when: "2025 to 2026",
     tags: ["Mechanical"],
     cover: { plate: ["MASA", "CAD team"] },
     specs: [["Role", "CAD team member"], ["Where", "Michigan Aeronautical Science Association"]],
-    detail: "Modelled components for the landing pad subsystem in Siemens NX and Fusion 360.",
+    detail: "CAD team member on the landing pad subsystem.",
     blocks: [],
   },
 ];
+
+// Display order on the index and for Previous/Next on the sheets.
+const order = ["gap-vehicle", "dj", "rov", "tracker", "drone-swarm", "gridnode", "frc", "baja", "masa", "atombot", "local-ai"];
+export const items = order.map((id) => all.find((it) => it.id === id));
