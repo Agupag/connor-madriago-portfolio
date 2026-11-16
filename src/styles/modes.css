@@ -1,0 +1,151 @@
+@layer modes {
+  /* Signal: technical drawings and sketches sit on a bright plate, the way a sheet
+     of print does on an instrument bench. Nothing else changes. */
+  html[data-theme="signal"] .fig--bare .fig__frame,
+  html[data-theme="signal"] .sketchbox {
+    background: #f2f4ef;
+  }
+  html[data-theme="signal"] .fig--bare .fig__frame {
+    padding: clamp(8px, 1.6vw, 20px);
+  }
+  html[data-theme="signal"] .sketchbox {
+    padding: 4%;
+  }
+  html[data-theme="print"] .fig--bare .fig__frame {
+    background: #fff;
+  }
+  html[data-theme="print"] .fig--bare .fig__frame > img {
+    mix-blend-mode: multiply;
+  }
+  html[data-theme="blueprint"] .fig--bare .fig__frame {
+    background: #eef3ff;
+    padding: clamp(8px, 1.6vw, 20px);
+  }
+  html[data-theme="blueprint"] .sketchbox {
+    background: #eef3ff;
+  }
+  html[data-theme="blueprint"] .fig .leaders {
+    filter: drop-shadow(0 0 1.2px #0d1f4f) drop-shadow(0 0 1.2px #0d1f4f);
+  }
+  html[data-theme="blueprint"] .pt {
+    box-shadow: 0 0 0 1.5px #0d1f4f;
+  }
+  html[data-theme="blueprint"] .w-thr--2 {
+    fill: color-mix(in srgb, var(--ink) 45%, var(--paper));
+  }
+
+  /* Highlighted widget states: lime needs dark ink on it in every mode. */
+  .w-bytes span.is-on,
+  .w-frame__ch.is-on,
+  .w-run__seg:hover:not(.is-on),
+  .w-key:hover {
+    color: var(--c-mark-text);
+  }
+  .w-bytes span.is-on i,
+  .w-frame__ch.is-on i {
+    color: color-mix(in srgb, var(--c-mark-text) 72%, transparent);
+  }
+  .w-run__seg.is-on,
+  .w-key.is-on {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .bar,
+    .layer__bar {
+      background: var(--paper);
+      backdrop-filter: none;
+    }
+    .stamp--sig {
+      background: var(--c-void);
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .field,
+    body::before {
+      display: none;
+    }
+    .fig__frame,
+    .row,
+    .practice__row,
+    .contact__links li,
+    .facts div,
+    .stage__specs div {
+      border-color: var(--ink);
+    }
+    .bar {
+      background: var(--paper);
+      backdrop-filter: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .field,
+    .cal,
+    body::before {
+      display: none;
+    }
+    .bar,
+    .layer__bar,
+    .fig__frame,
+    .row,
+    .chip,
+    .pill {
+      border: 1px solid CanvasText;
+    }
+    .chip[aria-pressed="true"],
+    .pill--signal {
+      background: Highlight;
+      color: HighlightText;
+    }
+    .stamp,
+    .proof__num {
+      color: CanvasText;
+      background: Canvas;
+      border: 1px solid CanvasText;
+    }
+  }
+
+  @media print {
+    .bar,
+    .field,
+    .cal,
+    .layer__bar,
+    .skip,
+    .contact__controls,
+    .fig__zoom {
+      display: none !important;
+    }
+    body::before {
+      display: none;
+    }
+    .layer {
+      position: static;
+      overflow: visible;
+    }
+    .project {
+      display: block;
+    }
+    .project__side-in {
+      position: static;
+    }
+    .project__body > .fig {
+      margin-left: 0;
+    }
+    .sig__plate img {
+      height: auto;
+    }
+    .fig,
+    .check,
+    .nextup {
+      break-inside: avoid;
+    }
+    .mark,
+    .check mark {
+      border: 1px solid #000;
+    }
+  }
+}

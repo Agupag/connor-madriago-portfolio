@@ -1,15 +1,23 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { motion, useScroll } from "motion/react";
-import { Figure } from "./Media.jsx";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { Figure, Media } from "./Media.jsx";
 import { rich } from "./rich.jsx";
-import { openProject, useMedia } from "../hooks.js";
+import { openProject, useInView, useMedia } from "../hooks.js";
 import { sketches } from "../data/sketches.jsx";
 import { me } from "../data/content.jsx";
 
 const emailHref = (me.links.find(([k]) => k === "Email") || [])[2];
+const nn = (n) => String(n).padStart(2, "0");
 
 const ModelViewer = lazy(() => import("./ModelViewer.jsx"));
-const Widget = lazy(() => import("./Widgets.jsx").then((m) => ({ default: ({ id }) => { const W = m.widgets[id]; return <W />; } })));
+const Widget = lazy(() =>
+  import("./Widgets.jsx").then((m) => ({
+    default: ({ id }) => {
+      const W = m.widgets[id];
+      return <W />;
+    },
+  }))
+);
 
 function Text({ block }) {
   return (
@@ -30,9 +38,12 @@ function Text({ block }) {
   );
 }
 
+// Rows tick in once, in reading order.
 function Check({ block }) {
+  const ref = useRef(null);
+  const seen = useInView(ref, { amount: 0.25, once: true });
   return (
-    <table className="check">
+    <table className={"check" + (seen ? " is-seen" : "")} ref={ref}>
       {block.caption && <caption>{block.caption}</caption>}
       <thead>
         <tr>
@@ -44,8 +55,8 @@ function Check({ block }) {
         </tr>
       </thead>
       <tbody>
-        {block.rows.map(([name, asked, got, state]) => (
-          <tr key={name}>
+        {block.rows.map(([name, asked, got, state], i) => (
+          <tr key={name} style={{ "--i": i }}>
             <th scope="row">{name}</th>
             <td>{asked}</td>
             <td className={state === "miss" ? "miss" : "got"}>{state === "ok" ? <mark>{got}</mark> : got}</td>
@@ -78,7 +89,7 @@ function Embed({ block, n }) {
   const wide = useMedia("(min-width: 900px)");
   const [on, setOn] = useState(false);
   return (
-    <figure className="fig">
+    <figure className="fig fig--embed" data-kind="Embedded app">
       <div className="fig__frame fig__frame--embed" style={{ aspectRatio: block.ratio || "16 / 10" }}>
         {on && wide ? (
           <iframe src={block.src} title={block.title} sandbox="allow-scripts allow-same-origin" />
@@ -86,11 +97,11 @@ function Embed({ block, n }) {
           <>
             <img src={block.poster} alt={block.alt || ""} loading="lazy" />
             {wide ? (
-              <button type="button" className="btn embed__go" onClick={() => setOn(true)}>
+              <button type="button" className="pill pill--signal embed__go" onClick={() => setOn(true)}>
                 {block.cta}
               </button>
             ) : (
-              <a className="btn embed__go" href={block.src} target="_blank" rel="noreferrer">
+              <a className="pill pill--signal embed__go" href={block.src} target="_blank" rel="noreferrer">
                 {block.cta}
               </a>
             )}
@@ -167,7 +178,7 @@ function Block({ block, num }) {
     }
     case "widget":
       return (
-        <figure className="fig fig--widget">
+        <figure className="fig fig--widget" data-kind="Console">
           <div className="fig__frame">
             <Suspense fallback={<div className="model__wait">Loading</div>}>
               <Widget id={block.id} />
@@ -181,7 +192,7 @@ function Block({ block, num }) {
       );
     case "model":
       return (
-        <figure className="fig">
+        <figure className="fig fig--model" data-kind="3D model">
           <div className="fig__frame fig__frame--model">
             <Suspense fallback={<div className="model__wait">Loading the 3D model</div>}>
               <ModelViewer {...block} look={block.look} />
@@ -223,28 +234,31 @@ function numberFigures(item) {
 
 export default function Sheet({ item, items }) {
   const scroller = useRef(null);
-  const closeBtn = useRef(null);
+  const body = useRef(null);
   const i = items.findIndex((it) => it.id === item.id);
   const prev = items[(i - 1 + items.length) % items.length];
   const next = items[(i + 1) % items.length];
   const num = numberFigures(item);
-  const body = useRef(null);
+  const { scrollYProgress, scrollY } = useScroll({ container: scroller });
   const [sections, setSections] = useState([]);
-  const { scrollYProgress } = useScroll({ container: scroller });
+  const [here, setHere] = useState(0);
+  const [barTitle, setBarTitle] = useState(false);
 
-  // Section list for the side column, read from the headings actually on the page.
+  useMotionValueEvent(scrollY, "change", (v) => setBarTitle(v > 150));
+
+  // Chapter list, read from the headings actually on the page.
   useEffect(() => {
-    const hs = [...(body.current?.querySelectorAll("h2, caption") || [])];
+    const hs = [...(body.current?.querySelectorAll("h2") || [])];
     setSections(hs.map((h, k) => ({ k, label: h.textContent })));
   }, [item.id]);
-  const [here, setHere] = useState(0);
-  // Highlight the section currently being read.
+
+  // Highlight the chapter currently being read.
   useEffect(() => {
     const root = scroller.current;
-    const hs = [...(body.current?.querySelectorAll("h2, caption") || [])];
+    const hs = [...(body.current?.querySelectorAll("h2") || [])];
     if (!root || !hs.length) return;
     const onScroll = () => {
-      const top = root.getBoundingClientRect().top + 140;
+      const top = root.getBoundingClientRect().top + 160;
       let k = 0;
       hs.forEach((h, n) => {
         if (h.getBoundingClientRect().top < top) k = n;
@@ -255,9 +269,9 @@ export default function Sheet({ item, items }) {
     onScroll();
     return () => root.removeEventListener("scroll", onScroll);
   }, [item.id, sections.length]);
+
   const jump = (k) => {
-    const hs = body.current?.querySelectorAll("h2, caption");
-    hs?.[k]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    body.current?.querySelectorAll("h2")[k]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   useEffect(() => {
@@ -287,39 +301,56 @@ export default function Sheet({ item, items }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="sheet-h"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      initial={{ opacity: 0, x: 22 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -16 }}
+      transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="layer__bar">
         <motion.div className="layer__progress" style={{ scaleX: scrollYProgress }} />
-        <div className="sheet layer__bar-in">
-          <button ref={closeBtn} type="button" className="textb layer__back" onClick={() => openProject(null)}>
-            Back to all work
+        <div className="layer__bar-in">
+          <button type="button" className="bar__back" onClick={() => openProject(null)}>
+            <span aria-hidden="true">←</span> all work
           </button>
-          <span className="layer__where">
-            {i + 1} of {items.length}
+          <span className={"layer__title" + (barTitle ? " is-on" : "")} aria-hidden={!barTitle}>
+            {item.title}
           </span>
-          <a className="textb" href={emailHref}>
-            Email
+          <span className="layer__where micro">
+            {nn(i + 1)} / {nn(items.length)}
+          </span>
+          <a className="bar__link" href={emailHref}>
+            email
           </a>
-          <button type="button" className="textb" onClick={() => openProject(prev.id)}>
-            Previous
+          <button type="button" className="bar__link" onClick={() => openProject(prev.id)} title={`Previous: ${prev.title}`}>
+            prev
           </button>
-          <button type="button" className="textb" onClick={() => openProject(next.id)}>
-            Next
+          <button type="button" className="bar__link" onClick={() => openProject(next.id)} title={`Next: ${next.title}`}>
+            next
           </button>
         </div>
       </div>
 
       <article className="sheet project" key={item.id}>
+        {item.hero && (
+          <motion.div
+            className="project__hero"
+            initial={{ opacity: 0, scale: 1.015 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Block block={item.hero} num={num} />
+          </motion.div>
+        )}
+
         <motion.header
           className="project__head"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.08 }}
+          transition={{ duration: 0.38, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
         >
+          <p className="micro project__kicker">
+            {item.when} · {item.tags.join(" · ")}
+          </p>
           <h1 id="sheet-h" tabIndex={-1}>
             {item.title}
           </h1>
@@ -328,45 +359,53 @@ export default function Sheet({ item, items }) {
 
         <aside className="project__side">
           <div className="project__side-in">
-          <dl className="facts">
-            {item.facts.map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd>{rich(v)}</dd>
-              </div>
-            ))}
-          </dl>
-          {sections.length > 2 && (
-            <nav className="toc" aria-label="Sections on this page">
-              <p className="toc__label">On this page</p>
-              <ul>
-                {sections.map((s) => (
-                  <li key={s.k} className={here === s.k ? "is-here" : ""}>
-                    <button type="button" aria-current={here === s.k ? "location" : undefined} onClick={() => jump(s.k)}>
-                      {s.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
+            <dl className="facts">
+              {item.facts.map(([k, v]) => (
+                <div key={k}>
+                  <dt className="micro">{k}</dt>
+                  <dd>{rich(v)}</dd>
+                </div>
+              ))}
+            </dl>
+            {sections.length > 1 && (
+              <nav className="toc" aria-label="Sections on this page">
+                <p className="toc__label micro">Chapters</p>
+                <ul>
+                  {sections.map((s) => (
+                    <li key={s.k} className={here === s.k ? "is-here" : ""}>
+                      <button
+                        type="button"
+                        aria-current={here === s.k ? "location" : undefined}
+                        onClick={() => jump(s.k)}
+                      >
+                        <span className="toc__n">{nn(s.k + 1)}</span>
+                        {s.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
           </div>
         </aside>
 
         <div className="project__body" ref={body}>
-          {item.hero && (
-            <motion.div layoutId={"cover-" + item.id} className="project__hero">
-              <Block block={item.hero} num={num} />
-            </motion.div>
-          )}
           {item.blocks.map((b, k) => (
             <Block key={k} block={b} num={num} />
           ))}
 
           <button type="button" className="nextup" onClick={() => openProject(next.id)}>
-            <span>Next</span>
-            <strong>{next.title}</strong>
-            <em>{rich(next.line)}</em>
+            <span className="nextup__plate" aria-hidden="true">
+              <Media media={next.cover} />
+            </span>
+            <span className="nextup__body">
+              <span className="micro">Next · {nn(((i + 1) % items.length) + 1)}</span>
+              <strong>{next.title}</strong>
+              <em>{rich(next.line)}</em>
+            </span>
+            <span className="nextup__go" aria-hidden="true">
+              →
+            </span>
           </button>
         </div>
       </article>

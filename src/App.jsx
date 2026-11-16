@@ -1,75 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, MotionConfig } from "motion/react";
+import Bar from "./components/Home/Bar.jsx";
 import Cover from "./components/Cover.jsx";
 import Sheet from "./components/Sheet.jsx";
 import { useRoute } from "./hooks.js";
 import { me, items } from "./data/content.jsx";
 
-const email = me.links.find(([k]) => k === "Email");
-const emailHref = email ? email[2] : "";
+const MODES = ["signal", "print", "blueprint"];
+// A new key on purpose: older sessions stored "print" automatically, and that
+// should not decide what the redesign looks like for a returning visitor.
+const STORE = "bench-view";
 
-function Header({ onIndex }) {
-  const [titleOnScreen, setTitleOnScreen] = useState(false);
-  // On the index, the name in the bar stays hidden while the page's own H1 is showing.
-  useEffect(() => {
-    if (!onIndex) return;
-    const h1 = document.querySelector(".cover h1");
-    if (!h1) return;
-    const io = new IntersectionObserver(([e]) => setTitleOnScreen(e.isIntersecting));
-    io.observe(h1);
-    return () => io.disconnect();
-  }, [onIndex]);
-  const hideName = onIndex && titleOnScreen;
-  return (
-    <header className="top">
-      <div className="sheet top__row">
-        <a className="top__name" href="#/" style={hideName ? { visibility: "hidden" } : undefined}>
-          {me.name}
-        </a>
-        <button
-          type="button"
-          className="textb top__opt"
-          onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          Contact
-        </button>
-        <a className="textb top__link" href={emailHref}>
-          Email
-        </a>
-        <a className="btn top__resume" href={me.resume}>
-          Resume<span className="top__pdf"> (PDF)</span>
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function Footer({ hidden, theme, setTheme }) {
-  return (
-    <footer className="close" id="contact" inert={hidden || undefined}>
-      <div className="sheet close__grid">
-        <div>
-          <h2>Contact</h2>
-          <button
-            type="button"
-            className="close__theme"
-            aria-pressed={theme === "blueprint"}
-            onClick={() => setTheme(theme === "blueprint" ? "print" : "blueprint")}
-          >
-            Blueprint view
-          </button>
-        </div>
-        <ul className="close__links">
-          {me.links.map(([k, label, href]) => (
-            <li key={k}>
-              <span>{k}</span>
-              <a href={href}>{label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </footer>
-  );
+function readMode() {
+  try {
+    const saved = localStorage.getItem(STORE);
+    if (MODES.includes(saved)) return saved;
+  } catch {}
+  // Signal is the default instrument; print is one click away.
+  return "signal";
 }
 
 export default function App() {
@@ -78,37 +26,35 @@ export default function App() {
   const lastId = useRef(null);
   if (item) lastId.current = item.id;
   const sheets = items.filter((it) => it.blocks.length);
-  const [theme, setTheme] = useState(() => {
-    try {
-      return localStorage.getItem("theme") === "blueprint" ? "blueprint" : "print";
-    } catch {
-      return "print";
-    }
-  });
+
+  const [mode, setMode] = useState(readMode);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.theme = mode;
     try {
-      localStorage.setItem("theme", theme);
+      localStorage.setItem(STORE, mode);
     } catch {}
-  }, [theme]);
+  }, [mode]);
 
   useEffect(() => {
     document.title = item ? `${item.title} · ${me.name}` : `${me.name}, mechanical engineering projects`;
   }, [item]);
 
   return (
-    <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 260, damping: 30 }}>
+    <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 220, damping: 26 }}>
       <LayoutGroup>
-        <Header onIndex={!item} />
-        <Cover hidden={!!item} />
-        <Footer hidden={!!item} theme={theme} setTheme={setTheme} />
+        <a className="skip" href="#main">
+          Skip to content
+        </a>
+        {!item && <Bar mode={mode} setMode={setMode} />}
+        <Cover hidden={!!item} mode={mode} setMode={(m) => MODES.includes(m) && setMode(m)} />
         <AnimatePresence
           onExitComplete={() =>
             document.querySelector(`[data-row="${lastId.current}"]`)?.focus({ preventScroll: true })
           }
         >
-          {item && <Sheet key="sheet" item={item} items={sheets} />}</AnimatePresence>
+          {item && <Sheet key="sheet" item={item} items={sheets} />}
+        </AnimatePresence>
       </LayoutGroup>
     </MotionConfig>
   );

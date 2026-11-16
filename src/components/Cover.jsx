@@ -1,182 +1,24 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { Media } from "./Media.jsx";
-import { rich } from "./rich.jsx";
-import { openProject, useMedia } from "../hooks.js";
-import { me, groups, items } from "../data/content.jsx";
+import SignalField from "./SignalField.jsx";
+import Calibration from "./Calibration.jsx";
+import Hero from "./Home/Hero.jsx";
+import Proof from "./Home/Proof.jsx";
+import Work from "./Home/Work.jsx";
+import Signature from "./Home/Signature.jsx";
+import Practice from "./Home/Practice.jsx";
+import Contact from "./Home/Contact.jsx";
 
-function Preview({ item }) {
+// The home page: a short scroll that still holds all 11 entries.
+export default function Cover({ hidden, mode, setMode }) {
   return (
-    <div className="preview">
-      <button
-        className="preview__open"
-        type="button"
-        tabIndex={-1}
-        onClick={() => item.blocks.length && openProject(item.id)}
-        aria-label={`Open ${item.title}`}
-      >
-        <motion.div className="preview__frame" layoutId={"cover-" + item.id}>
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={item.id}
-              className="preview__media"
-              initial={{ opacity: 0, scale: 1.03 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-            >
-              <Media media={item.cover} eager />
-            </motion.div>
-          </AnimatePresence>
-          {item.stamp && (
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={item.id}
-                className="dim preview__stamp"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, delay: 0.12 }}
-              >
-                {item.stamp.map((l, i) => (
-                  <span key={i}>{l}</span>
-                ))}
-              </motion.span>
-            </AnimatePresence>
-          )}
-        </motion.div>
-      </button>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={item.id}
-          className="preview__body"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <h3>{item.title}</h3>
-          <dl className="preview__specs">
-            {item.specs.map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-          </dl>
-          {item.blocks.length ? (
-            <button className="btn" type="button" onClick={() => openProject(item.id)}>
-              Open the full write-up
-            </button>
-          ) : (
-            <p className="preview__detail">{item.detail}</p>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
-
-let hoverTimer;
-
-function Row({ item, active, onActive, wide }) {
-  return (
-    <motion.li
-      layout="position"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.22 }}
-    >
-      <button
-        type="button"
-        className={"row" + (active ? " is-active" : "") + (!wide && item.cover.plate ? " row--nothumb" : "")}
-        onPointerEnter={(e) => {
-          if (e.pointerType !== "mouse") return;
-          clearTimeout(hoverTimer);
-          hoverTimer = setTimeout(() => onActive(item.id), 60);
-        }}
-        onPointerLeave={() => clearTimeout(hoverTimer)}
-        onFocus={() => onActive(item.id)}
-        onClick={() => item.blocks.length && openProject(item.id)}
-        data-row={item.id}
-        data-brief={item.blocks.length ? undefined : ""}
-      >
-        {!wide && !item.cover.plate && (
-          <motion.span className="row__thumb" layoutId={"cover-" + item.id}>
-            <Media media={item.cover} still />
-          </motion.span>
-        )}
-        <span className="row__title">{item.title}</span>
-        <span className="row__line">
-          {rich(item.line)}
-          {!wide && item.detail && <span className="row__detail">{item.detail}</span>}
-        </span>
-        <span className="row__when">{item.when}</span>
-      </button>
-    </motion.li>
-  );
-}
-
-export default function Cover({ hidden }) {
-  const wide = useMedia("(min-width: 1000px)");
-  const [active, setActive] = useState(items.find((it) => it.group === groups[0].id)?.id ?? items[0].id);
-  const current = items.find((it) => it.id === active) || items[0];
-  const pick = (id) => setActive(id);
-
-  return (
-    <main className="cover sheet" id="top" inert={hidden || undefined}>
-      <div className="cover__top">
-        <div className="cover__who">
-          <h1>{me.name}</h1>
-          <p className="cover__say">{me.say}</p>
-          <p className="cover__avail">{me.note}</p>
-        </div>
-        <div className="cover__aside">
-          <p className="cover__meta">{me.meta}</p>
-          <p className="cover__tools">{me.tools}</p>
-        </div>
-      </div>
-
-      <div className="cover__main">
-        <div
-          className="cover__list"
-          onKeyDown={(e) => {
-            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-            const rows = [...e.currentTarget.querySelectorAll(".row")];
-            const at = rows.indexOf(document.activeElement);
-            if (at < 0) return;
-            e.preventDefault();
-            rows[(at + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length].focus();
-          }}
-        >
-          {wide && <p className="cover__hint">Hover a row to preview it. Click to open the full write-up.</p>}
-          {groups.map((g) => {
-            const rows = items.filter((it) => it.group === g.id);
-            if (!rows.length) return null;
-            return (
-              <section key={g.id} aria-labelledby={"g-" + g.id}>
-                <h2 className="group" id={"g-" + g.id}>
-                  {g.title}
-                </h2>
-                <ul className="rows">
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {rows.map((it) => (
-                      <Row key={it.id} item={it} wide={wide} active={wide && current && current.id === it.id} onActive={pick} />
-                    ))}
-                  </AnimatePresence>
-                </ul>
-              </section>
-            );
-          })}
-        </div>
-
-        {wide && current && (
-          <aside className="cover__preview" aria-label="Preview of the highlighted item">
-            <Preview item={current} />
-          </aside>
-        )}
-      </div>
+    <main className="home" id="main" tabIndex={-1} inert={hidden || undefined}>
+      <SignalField />
+      <Calibration />
+      <Hero />
+      <Proof />
+      <Work />
+      <Signature />
+      <Practice />
+      <Contact mode={mode} setMode={setMode} />
     </main>
   );
 }

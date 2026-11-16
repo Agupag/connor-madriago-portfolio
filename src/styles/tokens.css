@@ -1,0 +1,129 @@
+/* Bench Signal design tokens.
+   One contract, three modes: Signal (the instrument), Print (the daylight twin)
+   and Blueprint (kept because it already worked). No component knows which is on. */
+
+@layer tokens {
+  @font-face {
+    font-family: "Archivo";
+    src: url("/assets/fonts/archivo-latin-wdth-normal.woff2") format("woff2-variations");
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Routed Gothic";
+    src: url("/assets/fonts/routed-gothic.ttf") format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Routed Gothic Wide";
+    src: url("/assets/fonts/routed-gothic-wide.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  :root {
+    color-scheme: dark;
+
+    /* Signal: dark calibrated surface. Lime on near-black measures above 14:1. */
+    --c-void: #0b0d0e;
+    --c-panel: #121617;
+    --c-well: #151a1b;
+    --c-text: #f2f4ef;
+    --c-mute: #8d9895;
+    --c-line: #24302e;
+    --c-signal: #d6ff3f;
+    --c-alert: #ff6b47;
+    --c-alert-text: #ff8a6d;
+    --c-hi: #d6ff3f;
+    --c-paper: #f2f4ef;
+    --c-mark-text: #0b0d0e;
+    --c-on-signal: #0b0d0e;
+    --grain-opacity: 0.05;
+
+    /* Legacy aliases the components were written against. */
+    --paper: var(--c-void);
+    --paper-deep: var(--c-panel);
+    --ink: var(--c-text);
+    --graphite: var(--c-mute);
+    --red: var(--c-alert);
+    --hi: var(--c-hi);
+    --white: var(--c-well);
+    --rule: color-mix(in srgb, var(--c-line) 92%, transparent);
+    --hair: color-mix(in srgb, var(--c-text) 16%, transparent);
+
+    --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --hand: "Routed Gothic", "Archivo", sans-serif;
+    --hand-wide: "Routed Gothic Wide", "Routed Gothic", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --fs-body: 1.0625rem;
+    --fs-small: 0.9375rem;
+    --fs-micro: 0.75rem;
+
+    --gutter: clamp(16px, 3.6vw, 48px);
+    --maxw: 1560px;
+    --bar-h: 56px;
+    --rail: 232px;
+    --colgap: clamp(24px, 3vw, 48px);
+    --line: 1px;
+
+    /* Motion: 120 / 220 / 380 / 620 / 1200. */
+    --dur-1: 120ms;
+    --dur-2: 220ms;
+    --dur-3: 380ms;
+    --dur-4: 620ms;
+    --dur-5: 1200ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --shift: 60ms;
+
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Print: the palette the site already had, refined rather than replaced. */
+  html[data-theme="print"] {
+    color-scheme: light;
+    --c-void: #eceee9;
+    --c-panel: #e3e6e0;
+    --c-well: #ffffff;
+    --c-text: #1e2875;
+    --c-mute: #555b6e;
+    --c-line: #c3c9c2;
+    --c-signal: #1e2875;
+    --c-alert: #c4261a;
+    --c-alert-text: #c4261a;
+    --c-hi: #ffe25a;
+    --c-paper: #eceee9;
+    --c-mark-text: #1e2875;
+    --c-on-signal: #eceee9;
+    --grain-opacity: 0.06;
+    --line: 1.5px;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Blueprint: the hidden third. */
+  html[data-theme="blueprint"] {
+    color-scheme: dark;
+    --c-void: #17367f;
+    --c-panel: #122b68;
+    --c-well: #10204d;
+    --c-text: #eef3ff;
+    --c-mute: #b7c5ee;
+    --c-line: #2c4c96;
+    --c-signal: #ffd34f;
+    --c-alert: #ffd34f;
+    --c-alert-text: #ffd34f;
+    --c-hi: #ffd34f;
+    --c-paper: #17367f;
+    --c-mark-text: #10204d;
+    --c-on-signal: #10204d;
+    --grain-opacity: 0.05;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  @media (max-width: 1279px) {
+    :root {
+      --rail: 188px;
+    }
+  }
+}
