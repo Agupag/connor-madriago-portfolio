@@ -7,6 +7,8 @@ REPO_URL="https://github.com/Agupag/connor-madriago-portfolio.git"
 SITE="https://agupag.github.io/connor-madriago-portfolio"
 
 npx vite build
+STAMP="$(git rev-parse --short HEAD)-$(date +%s)"
+echo "$STAMP" > dist/version.txt
 TMP="$(mktemp -d)"
 cp -R dist/. "$TMP/"
 touch "$TMP/.nojekyll"
@@ -18,10 +20,9 @@ touch "$TMP/.nojekyll"
     commit -q -m "Publish site build"
   git push -q -f "$REPO_URL" gh-pages
 )
-HASH="$(ls dist/app | grep '^index-.*\.js$')"
-echo "Waiting for $HASH to go live..."
+echo "Waiting for build $STAMP to go live..."
 for i in $(seq 1 60); do
-  if curl -s "$SITE/?t=$i" | grep -q "$HASH"; then echo "Live: $SITE/"; exit 0; fi
+  if [ "$(curl -s "$SITE/version.txt?t=$i")" = "$STAMP" ]; then echo "Live: $SITE/ (build $STAMP)"; exit 0; fi
   sleep 5
 done
 echo "Not live after 5 minutes. If Pages did not rebuild, run:"
